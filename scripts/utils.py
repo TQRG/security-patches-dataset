@@ -1,4 +1,6 @@
 import json
+import os 
+import shutil
 
 from pathlib import Path
 
@@ -13,6 +15,10 @@ def load_config(filename):
     with open("{}/{}".format(Path(__file__).parent.absolute(), filename)) as config:
         data = json.load(config)
     return data
+
+def archive_vuln(path, repo):
+    with open(path, 'wb') as vv:
+        repo.archive(vv)
 
 def remove_dir(path):
     for the_file in os.listdir(path):
