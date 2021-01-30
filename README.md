@@ -9,6 +9,16 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+### Data Analysis 
+
+Jupyter notebooks are available. Charts and wordclouds are saved at `notebook/charts`.
+
+```
+source venv/bin/activate
+cd notebooks
+jupyter notebook
+```
+
 ### CVE Details
 
 Scrapping cvedetails for CVEs in 1999:
@@ -75,12 +85,11 @@ source venv/bin/activate
 python scripts/add_features.py --feature lang -file positive.csv
 ```
 
-### Data Analysis 
+### Download codebases
 
-Jupyter notebooks are available. Charts and wordclouds are saved at `notebook/charts`.
+To download Scala samples:
 
 ```
 source venv/bin/activate
-cd notebooks
-jupyter notebook
+python3 scripts/download.py -file dataset/positive.csv -folder code_samples -language Scala
 ```
