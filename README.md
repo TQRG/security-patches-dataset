@@ -46,6 +46,15 @@ source venv/bin/activate
 python3 scripts/get_metadata.py --source cvedetails -file positive.csv
 ```
 
+Configure the github API at `scripts/config/`. 
+```
+source venv/bin/activate
+cd scripts/config/
+cp github_template.json github.json
+```
+
+Add a token and username to the file with permissions for repositories and users information.
+
 Get GitHub data: 
 ```
 source venv/bin/activate
