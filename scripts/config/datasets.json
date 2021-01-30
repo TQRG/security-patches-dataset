@@ -1,0 +1,6 @@
+{
+	"pontas": "sources/pontas_msr19.csv",
+	"cve_details": "sources/cve_details.csv",
+	"secbench": "sources/secbench_secse17.csv",
+	"big_vul": "sources/big_vul_msr20.csv"
+}
