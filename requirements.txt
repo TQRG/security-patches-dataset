@@ -6,3 +6,4 @@ beautifulsoup4
 wordcloud
 colored
 gitpython
+PyGithub
