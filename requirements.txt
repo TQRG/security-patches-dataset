@@ -1,0 +1,7 @@
+spacy
+numpy
+pandas
+jupyterlab
+beautifulsoup4
+wordcloud
+colored
