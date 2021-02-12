@@ -5,3 +5,4 @@ jupyterlab
 beautifulsoup4
 wordcloud
 colored
+gitpython
