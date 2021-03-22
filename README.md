@@ -1,5 +1,5 @@
 
-Building a ground truth dataset of real security patches.
+Building a ground truth dataset of real security patches for machine learning and testing activities.
 
 ### Installation
 
