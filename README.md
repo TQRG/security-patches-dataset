@@ -1,7 +1,7 @@
 
 Building a ground truth dataset of real security patches for machine learning and testing activities.
 
-Datasets included:
+Datasets:
 - [X] [SecBench](https://github.com/TQRG/secbench)
 - [X] [CVEDetails](https://www.cvedetails.com/)
 - [X] [BigVul](https://github.com/ZeoVan/MSR_20_Code_vulnerability_CSV_Dataset)
