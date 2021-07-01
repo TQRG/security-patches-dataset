@@ -1,6 +1,18 @@
 
 Building a ground truth dataset of real security patches for machine learning and testing activities.
 
+Datasets included:
+- [X] [SecBench](https://github.com/TQRG/secbench)
+- [X] [CVEDetails](https://www.cvedetails.com/)
+- [X] [BigVul](https://github.com/ZeoVan/MSR_20_Code_vulnerability_CSV_Dataset)
+- [X] [SAP](https://github.com/SAP/project-kb/tree/master/MSR2019)
+- [ ] [Google Go](https://github.com/golang/vulndb)
+- [ ] [Google Rust](https://github.com/RustSec/advisory-db)
+- [ ] [Google Python](https://github.com/pypa/advisory-db)
+- [ ] [DWF](https://github.com/distributedweaknessfiling/dwflist)
+- [ ] [OSS-Fuzz](https://github.com/google/oss-fuzz-vulns)
+- [ ] [CrossVul](https://dimitro.gr/assets/papers/NDLM21.pdf)
+
 ### Installation
 
 Requirements installation:
