@@ -35,11 +35,11 @@ jupyter notebook
 
 ### CVE Details
 
-Scrapping cvedetails for CVEs in 1999:
+Scrapping cvedetails for CVEs in 1999 (osv-schema):
 ```
 source venv/bin/activate
 cd scraper
-python3 scrape_cve_details.py --mode per_year -file data/1999.csv -year 1999
+python scrape_cve_details.py --mode per_year -folder data -year 2018 -db cve-details
 ```
 
 Merge data from data folder:
