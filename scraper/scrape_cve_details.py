@@ -14,21 +14,15 @@ WEBSITE_URL ='https://www.cvedetails.com'
 CVES_DICT = {'cve_id':[], 'cve_href':[], 'cwe_id':[], 'vuln_type':[], 
                 'publish_date':[], 'update_date':[], 'score':[], 'acces_level':[],
                 'access':[], 'complexity':[], 'authentication':[], 'confidentiality':[], 
-                'integrity':[], 'availability':[], 'summary':[], 'github': [], 'refs': []
+                'integrity':[], 'availability':[], 'summary':[], 'refs': []
                 }
 
-def get_ref_to_github(cve_url):
+def get_refs(cve_url):
     cve_details_page = req.get(cve_url)
     soup = BeautifulSoup(cve_details_page.content, 'html.parser')
     refs_table = soup.find(id='vulnrefstable') 
-    if refs_table != None:
-        refs = refs_table.find_all('a')
-        github = [ref['href'].strip() for ref in refs if 'github.com' in ref['href'].strip()]
-        refs = [ref['href'].strip() for ref in refs if 'github.com' not in ref['href'].strip()]
-    else:
-        github = []
-        refs = []
-    return github, refs
+    refs = refs_table.find_all('a')
+    return set(ref['href'].strip() for ref in refs)
  
 def load_data(file):
     if path.exists(file):
@@ -70,11 +64,9 @@ def parse_cves_rows(rows):
         CVES_DICT['authentication'].append(tds[11].getText().strip())
         CVES_DICT['confidentiality'].append(tds[12].getText().strip())
         CVES_DICT['integrity'].append(tds[13].getText().strip())
-        CVES_DICT['availability'].append(tds[13].getText().strip())
+        CVES_DICT['availability'].append(tds[14].getText().strip())
         CVES_DICT['summary'].append(rows[i+1].find_all('td')[0].getText().strip())
-        github, refs = get_ref_to_github('{}{}'.format(WEBSITE_URL, tds[1].a['href'].strip()))
-        CVES_DICT['github'].append(github)
-        CVES_DICT['refs'].append(refs)
+        CVES_DICT['refs'].append(get_refs('{}{}'.format(WEBSITE_URL, tds[1].a['href'].strip())))
     return CVES_DICT
 
 def get_cves_info(page):
@@ -87,9 +79,11 @@ def scrape_cve_details(year, file):
 
     cve_data = load_data(file)
     page_start = int(len(cve_data)/50)
+    print(f"Starting at page {page_start}")
     pages = get_pages(year, page_start)
 
     for page in tqdm(pages):
+        print(f"Scraping page: {page}")
         cves = get_cves_info(page)
         df_cves =  pd.DataFrame.from_dict(cves)
         cve_data = cve_data.append(df_cves, ignore_index=True)
@@ -105,7 +99,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     
     now = datetime.datetime.now()
-    years = (year for year in range(1999, now.year))
+    years = (year for year in range(1999, now.year+1))
 
     if args.format == 'per_year':  
         if args.file != None and int(args.year) in years:
