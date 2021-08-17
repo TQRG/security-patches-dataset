@@ -1,16 +1,16 @@
 
 Building a ground truth dataset of real security patches for machine learning and testing activities.
 
+❗️ Currently colleting data from CVE Details for 2020 and 2021 and augmenting the dataset for OSV, CrossVul and CVEFixes.
+
 Datasets:
-- [X] [CVEDetails](https://www.cvedetails.com/)
-- [X] [SecBench](https://github.com/TQRG/secbench)
+- [X] [CVEDetails](https://www.cvedetails.com/) - Includes data from CVEs from 1999 to 2021.
+- [X] [SecBench](https://github.com/TQRG/secbench) - Dataset with 687 patches for different programming languages.
 - [X] [BigVul](https://github.com/ZeoVan/MSR_20_Code_vulnerability_CSV_Dataset)
 - [X] [SAP](https://github.com/SAP/project-kb/tree/master/MSR2019)
-- [ ] [Google Go](https://github.com/golang/vulndb)
-- [ ] [Google Rust](https://github.com/RustSec/advisory-db)
-- [ ] [Google Python](https://github.com/pypa/advisory-db)
-- [ ] [DWF](https://github.com/distributedweaknessfiling/dwflist)
-- [ ] [OSS-Fuzz](https://github.com/google/oss-fuzz-vulns)
+- [ ] [OSV](https://osv.dev/) - Project maintained by Google. It integrates vulnerabilities from 
+different ecosystems: 
+[Go](https://github.com/golang/vulndb), [Google Rust](https://github.com/RustSec/advisory-db), [PyPI](https://github.com/pypa/advisory-db), [DWF](https://github.com/distributedweaknessfiling/dwflist), [OSS-Fuzz](https://github.com/google/oss-fuzz-vulns).
 - [ ] [CrossVul](https://dimitro.gr/assets/papers/NDLM21.pdf)
 - [ ] [CVEFixes](https://arxiv.org/pdf/2107.08760.pdf)
 
