@@ -99,6 +99,14 @@ source venv/bin/activate
 python scripts/add_features.py --feature lang -file positive.csv
 ```
 
+### Add Code Changes
+
+Adding code changes/diff information to the dataset:
+```
+source venv/bin/activate
+python3 scripts/get_code_changes.py -fin dataset/positive.csv -fout dataset/data.csv
+```
+
 ### Download codebases
 
 To download Scala samples:
