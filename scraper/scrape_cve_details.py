@@ -21,9 +21,12 @@ def get_refs(cve_url):
     cve_details_page = req.get(cve_url)
     soup = BeautifulSoup(cve_details_page.content, 'html.parser')
     refs_table = soup.find(id='vulnrefstable') 
-    refs = refs_table.find_all('a')
-    return set(ref['href'].strip() for ref in refs)
- 
+    if refs_table:
+        refs = refs_table.find_all('a')
+        return set(ref['href'].strip() for ref in refs)
+    else:
+        return set()
+        
 def load_data(file):
     if path.exists(file):
         cve_data = pd.read_csv(file)
