@@ -11,10 +11,10 @@ $PYTHON merge_cve_data.py -folder $CVE_DATA_FOLDER \
 
 echo "\nGetting the patches with references to github, bitbucket and gitlab..."
 $PYTHON get_patches_data.py --task filter \
-                                -fin ../dataset/$CVE_DATE_OUT_FILENAME \
-                                -fout ../dataset/all_$CVE_PATCHES_OUT_FILENAME
+                                -fin ../data/$CVE_DATE_OUT_FILENAME \
+                                -fout ../data/all_$CVE_PATCHES_OUT_FILENAME
 
 echo "\nGenerating data statistics..."
 $PYTHON get_patches_data.py --task stats  \
-                                -fin ../dataset/all_$CVE_PATCHES_OUT_FILENAME
+                                -fin ../data/all_$CVE_PATCHES_OUT_FILENAME
                      

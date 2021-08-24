@@ -19,7 +19,7 @@ def merge_cve_data(folder, file):
     count = sum([len(f) for f in df_list])
     df = pd.concat(df_list, axis=0, ignore_index=True)
     assert count == len(df)
-    f_out =f"../dataset/{file}"
+    f_out =f"../data/{file}"
     df.to_csv(f_out, index=False)
     print(f"{len(df)} CVEs saved to {f_out}")
 

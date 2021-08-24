@@ -80,7 +80,7 @@ def get_source_patches(fin, source):
     df_source = df[df['source'] == source]
 
     # save patches
-    fout = f'../dataset/{source}_cve_details_patches.csv'
+    fout = f'../data/{source}_cve_details_patches.csv'
     df_source.to_csv(fout, index=False)
     print(f"{len(df_source)} patches were saved to {fout}")
 
