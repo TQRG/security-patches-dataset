@@ -1,7 +1,7 @@
 
 Building a ground truth dataset of real security patches for machine learning and testing activities.
 
-❗️ Currently colleting data from CVE Details for 2020 and 2021 and augmenting the dataset for OSV, CrossVul and CVEFixes.
+❗️ Currently colleting data from CVE Details for 2020 and 2021 and augmenting the dataset for OSV, CrossVul and CVEfixes.
 
 Datasets:
 - [X] [CVEDetails](https://www.cvedetails.com/) - Includes data from CVEs from 1999 to 2021.
@@ -48,7 +48,7 @@ Merge data from data folder:
 ```
 source venv/bin/activate
 cd scraper
-python3 merge_cve_data.py -folder data/ -file cve_details.csv
+python3 merge_cve_data.py -folder data/ -file cve_details_data.csv
 ```
 
 Clean cve_details data:
