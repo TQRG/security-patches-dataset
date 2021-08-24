@@ -1,8 +1,6 @@
 
 Building a ground truth dataset of real security patches for machine learning and testing activities.
 
-❗️ Currently colleting data from CVE Details for 2020 and 2021 and augmenting the dataset for OSV, CrossVul and CVEfixes.
-
 Datasets:
 - [X] [CVEDetails](https://www.cvedetails.com/) - Includes data from CVEs from 1999 to 2021 (6486 patches) -- last update: 28-08-2021.
 - [X] [SecBench](https://github.com/TQRG/secbench) - Dataset with 687 patches for different programming languages.
