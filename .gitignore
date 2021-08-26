@@ -3,4 +3,4 @@
 *.ipynb_checkpoints/
 *.json
 tmp/
-data/cve_details_data.csv
+data/cve-details/raw-cve-details-data.csv
