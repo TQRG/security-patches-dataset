@@ -33,28 +33,29 @@ cd notebooks
 jupyter notebook
 ```
 
-### CVE Details
+### CVE Details Scraper
 
-Scrapping cvedetails for CVEs in 1999:
+Scrape `https://www.cvedetails.com/` for CVEs from 1999:
 ```
 source venv/bin/activate
-cd scraper
-python3 scrape_cve_details.py --mode per_year -file data/1999.csv -year 1999
+python3 cve-details/scraper.py --mode year -folder data/cve-details/year/ -year 1999
 ```
 
-Merge data from data folder:
+Generates dataset of patches available on GitHub:
 ```
 source venv/bin/activate
-cd scraper
-python3 merge_cve_data.py -folder data/ -file cve_details_data.csv
+source github_dataset_generator.sh
 ```
 
-Clean cve_details data:
+
+
+
+<!-- Clean cve_details data:
 ```
 source venv/bin/activate
 cd scraper
 python3 clean_data.py -file cve_details.csv
-```
+``` -->
 
 ### Dataset
 
