@@ -1,6 +1,8 @@
 
 Building a ground truth dataset of real security patches for machine learning and testing activities.
 
+Release 1: Code [here](https://github.com/TQRG/security-patches-dataset/tree/3d974be51e955b211c02a16b520cc5c7a10704ae); Paper [here](https://arxiv.org/abs/2110.09635)
+
 Datasets:
 - [X] [CVEDetails](https://www.cvedetails.com/) - Includes data from CVEs from 1999 to 2021 (6486 patches) -- last update: 28-08-2021.
 - [X] [SecBench](https://github.com/TQRG/secbench) - Dataset with 687 patches for different programming languages.
