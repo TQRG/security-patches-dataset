@@ -7,3 +7,4 @@ wordcloud
 colored
 gitpython
 PyGithub
+requests
