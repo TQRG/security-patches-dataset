@@ -9,7 +9,7 @@ import os
 
 import pandas as pd
 
-def nvd(folder, fout):
+def nvd_extractor(folder, fout):
 
     cve_files = [f for f in listdir(folder) if isfile(join(folder, f)) and '.json' in f]
     df = pd.DataFrame()
@@ -82,7 +82,7 @@ def process_cpe(cpe, cpes):
                 cpes[cpe].append(version)  
     return False, cpes 
 
-def osv(data):
+def osv_schema_generator(data):
 
     # create output for osv import
     vulns_output = 'vulns/'
@@ -221,9 +221,9 @@ if __name__ == '__main__':
     args = parser.parse_args()
     if args.format == 'format':
       if args.data and args.fout:
-        nvd(args.data, args.fout)
+        nvd_extractor(args.data, args.fout)
     elif args.format == 'osv':
       if args.data:
-        osv(args.data)
+        osv_schema_generator(args.data)
     else:
         print('Something is wrong. Verify your parameters.')
