@@ -8,6 +8,7 @@ Datasets:
 - [X] [SecBench](https://github.com/TQRG/secbench) - Dataset with 687 patches for different programming languages.
 - [X] [BigVul](https://github.com/ZeoVan/MSR_20_Code_vulnerability_CSV_Dataset)
 - [X] [SAP](https://github.com/SAP/project-kb/tree/master/MSR2019)
+- [X] [Devign](https://sites.google.com/view/devign) - only FFmpeg and Qemu commits.
 - [ ] [OSV](https://osv.dev/) - Project maintained by Google. It integrates vulnerabilities from 
 different ecosystems: 
 [Go](https://github.com/golang/vulndb), [Google Rust](https://github.com/RustSec/advisory-db), [PyPI](https://github.com/pypa/advisory-db), [DWF](https://github.com/distributedweaknessfiling/dwflist), [OSS-Fuzz](https://github.com/google/oss-fuzz-vulns).
