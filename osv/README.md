@@ -5,3 +5,5 @@ OSV is the Open Source Vulnerability Database provided by Google. The following 
 ```
 source download.sh
 ```
+
+To use the bash script, you have to change the `download.sh` file and add a GitHub Token.
