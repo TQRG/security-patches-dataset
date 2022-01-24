@@ -4,3 +4,4 @@
 *.json
 tmp/
 data/cve-details/raw-cve-details-data.csv
+emse-commits/*
