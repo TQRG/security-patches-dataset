@@ -1,5 +1,5 @@
 #!/bin/bash
-GITHUB_TOKEN=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
+GITHUB_TOKEN=TOKEN_PLACEHOLDER
 
 cd osv-schema/tools/ghsa/
 pipenv sync
