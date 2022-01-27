@@ -1,7 +1,7 @@
 #!/bin/bash
 GITHUB_TOKEN=TOKEN_PLACEHOLDER
 
-dir=../data/osv/
+dir=../../data/osv/
 rm -rf $dir
 if [[ ! -e $dir ]]; then
     mkdir $dir
