@@ -1,19 +1,17 @@
+# Collection of datasets for vulnerability prediction
 
-Building a ground truth dataset of real security patches for machine learning and testing activities.
+This repository integrates datasets from different sources and research papers. All the datasets provide commits for security patches.
 
 Release 1: Code [here](https://github.com/TQRG/security-patches-dataset/tree/3d974be51e955b211c02a16b520cc5c7a10704ae); Paper [here](https://arxiv.org/abs/2110.09635)
 
-Datasets:
+**Datasets:**
 - [X] [CVEDetails](https://www.cvedetails.com/) - Includes data from CVEs from 1999 to 2021 (6486 patches) -- last update: 17-01-2022.
 - [X] [SecBench](https://github.com/TQRG/secbench) - Dataset with 687 patches for different programming languages.
 - [X] [BigVul](https://github.com/ZeoVan/MSR_20_Code_vulnerability_CSV_Dataset)
 - [X] [SAP](https://github.com/SAP/project-kb/tree/master/MSR2019)
-- [X] [Devign](https://sites.google.com/view/devign) - only FFmpeg and Qemu commits.
-- [ ] [OSV](https://osv.dev/) - Project maintained by Google. It integrates vulnerabilities from 
-different ecosystems: 
-[Go](https://github.com/golang/vulndb), [Google Rust](https://github.com/RustSec/advisory-db), [PyPI](https://github.com/pypa/advisory-db), [DWF](https://github.com/distributedweaknessfiling/dwflist), [OSS-Fuzz](https://github.com/google/oss-fuzz-vulns).
-- [ ] [CrossVul](https://dimitro.gr/assets/papers/NDLM21.pdf)
-- [ ] [CVEFixes](https://arxiv.org/pdf/2107.08760.pdf)
+- [X] [Devign](https://sites.google.com/view/devign) - FFmpeg and Qemu commits ()
+- [X] [OSV](https://osv.dev/) - Project maintained by Google. It integrates vulnerabilities from 
+different ecosystems: `DWF`, `Go`, `Linux`, `Maven`, `NuGet`, `OSS-Fuzz`, `PyPI`, `RubyGems`, `crates.io`, `npm`.
 
 
 ### Installation
@@ -27,29 +25,6 @@ pip install -r requirements.txt
 ```
 
 ### Data Analysis 
-
-Jupyter notebooks are available. Charts and wordclouds are saved at `notebook/charts`.
-
-```
-source venv/bin/activate
-cd notebooks
-jupyter notebook
-```
-
-### CVE Details Scraper
-
-Scrape `https://www.cvedetails.com/` for CVEs from 1999:
-```
-source venv/bin/activate
-python3 cve-details/scraper.py --mode year -folder data/cve-details/year/ -year 1999
-```
-
-Generates dataset of patches available on GitHub:
-```
-source venv/bin/activate
-source github_dataset_generator.sh
-```
-
 
 
 
