@@ -44,6 +44,21 @@ def process(ecosystem, fout):
                                         introduced.add('0')
                                 elif 'fixed' in event.keys():
                                     fixed.add(f"{range['repo']}/commit/{event['fixed']}")
+            
+            severity, score, cwes = None, None, []
+            if 'database_specific' in data['affected'][0].keys():
+                db_spec = data['affected'][0]['database_specific']
+                if 'cwes' in db_spec.keys():
+                    for cwe in db_spec['cwes']:
+                        cwes.append(cwe['cweId'])
+                if 'cvss' in db_spec.keys():
+                    if db_spec['cvss'] and type(db_spec['cvss']) != str:
+                        if 'score' in db_spec['cvss'].keys():
+                            score = db_spec['cvss']['score']
+            if 'ecosystem_specific' in data['affected'][0].keys():
+                eco_spec = data['affected'][0]['ecosystem_specific']
+                if 'severity' in eco_spec.keys():
+                    severity = eco_spec['severity']
         
         code_refs = set.union(code_refs, fixed)
         
@@ -56,6 +71,9 @@ def process(ecosystem, fout):
                 'aliases': set(data['aliases']) if 'aliases' in data.keys() else None,
                 'modified_date': data['modified'] if 'modified' in data.keys() else data['updatedAt'],
                 'published_date': data['published'] if 'published' in data.keys() else data['publishedAt'],
+                'severity': severity,
+                'score': score,
+                'cwe_id': ','.join(cwes) if len(cwes) > 0 else None,
                 'refs': refs if 'references' in data.keys() else None,
                 'code_refs': code_refs if 'references' in data.keys() else None,
                 'introduced': introduced if len(introduced) > 0 else None
