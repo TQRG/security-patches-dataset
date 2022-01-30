@@ -4,4 +4,5 @@
 *.json
 tmp/
 data/cve-details/raw-cve-details-data.csv
-emse-commits/*
+data/nvd/raw-nvd-data.csv
+data/nvd/osv-raw-nvd-data.csv
