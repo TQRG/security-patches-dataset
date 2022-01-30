@@ -8,3 +8,4 @@ colored
 gitpython
 PyGithub
 requests
+gdown

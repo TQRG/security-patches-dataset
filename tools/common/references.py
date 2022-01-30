@@ -2,8 +2,25 @@ import argparse
 import re
 
 import pandas as pd
+import numpy as np
 
 from tqdm import tqdm
+
+LINE = "---------------------------"
+
+def get_source(refs):
+    """ Get source for each reference. """
+    refs, sources = eval(refs), []
+    for ref in refs:
+        if 'github' in ref:
+            sources.append('github')
+        elif 'bitbucket' in ref:
+            sources.append('bitbucket')
+        elif 'gitlab' in ref:
+            sources.append('gitlab')
+        elif 'git' in ref:
+            sources.append('git')
+    return sources
 
 def normalize_commit_data(f):
     """ Normalize commits references """
@@ -81,14 +98,78 @@ def collect_commits(fin, fout):
     print(f"{len(df_code_ref)} patches were saved to {fout}")
 
 
+def print_commits_stats(fin):
+    """ Print commits statistics. """
+
+    def set_len(x):
+        return len(eval(x))
+
+    # read the csv
+    df = pd.read_csv(fin)
+
+    # get number of commits involved in each patch
+    df['n_commits'] = df['code_refs'].transform(set_len)
+
+    print(f"{LINE}\ncommits (#)\tpatches (#)\n{LINE}")
+    # iterate over the stats
+    for n in np.sort(df['n_commits'].unique()):
+        print(f"{n}\t\t{len(df[df['n_commits'] == n])}")
+    print(f"{LINE}\n👀 n security patches where\nperformed using y commits\n{LINE}\n")
+    
+    # get commits source
+    sources = []
+    for s in df['code_refs'].transform(get_source):
+        sources += s
+
+    print(f"{LINE}{LINE}\nSOURCE\t\tpatches (#)\tpatches (%)\n{LINE}{LINE}")
+    # iterate over the different sources 
+    for source in set(sources):
+        n_source = len([s for s in sources if s == source])
+        if source == 'bitbucket':
+            print(f"{source}\t{n_source}\t\t{(n_source/len(sources))*100:.2f}%")
+        else:
+            print(f"{source}\t\t{n_source}\t\t{(n_source/len(sources))*100:.2f}%")
+    print(f"{LINE}{LINE}\n")
+
+def commits_source(fin, dataset, source):
+    # read csv
+    df = pd.read_csv(fin)
+
+    # get commits from source
+    for idx, row in df.iterrows():
+        refs, commits = eval(row['refs']), []
+        for ref in refs:
+            if source in ref:
+                commits.append(ref)
+        if len(commits) > 0:
+            df.at[idx, 'commits'] = set(commits)
+    
+    # drop rows without commits for source
+    df_source = df.dropna(subset=['commits'])
+
+    # save patches
+    fout = f'../../data/{dataset}/{source}-{dataset}-patches.csv'
+    df_source.to_csv(fout, index=False)
+    print(f"{len(df_source)} patches were saved to {fout}")
 
 
 if __name__ == '__main__':
     
     parser = argparse.ArgumentParser(description='CLI to process references')
-    parser.add_argument('--task', dest='format', choices=['normalize', 'commits', 'filter'])    
-    parser.add_argument('--fin', type=str, metavar='input file', help='file to clean')
-    parser.add_argument('--fout', type=str, metavar='file', help='new file')
+    parser.add_argument('--task', dest='format', 
+                                    choices=['normalize', 'commits', 'stats', 'filter'])    
+    parser.add_argument('--fin', type=str, 
+                                    metavar='input file', 
+                                    help='input file')
+    parser.add_argument('--fout', type=str, 
+                                    metavar='file', 
+                                    help='output file')
+    parser.add_argument('--source', type=str, 
+                                    metavar='str', 
+                                    help='name of the source')
+    parser.add_argument('--dataset', type=str, 
+                                    metavar='str', 
+                                    help='name of the dataset')
    
     args = parser.parse_args()
 
@@ -98,6 +179,12 @@ if __name__ == '__main__':
     elif args.format == 'commits':
         if args.fin and args.fout:
             collect_commits(args.fin, args.fout)
+    elif args.format == 'stats':
+        if args.fin:
+            print_commits_stats(args.fin)
+    elif args.format == 'filter':
+        if args.fin and args.dataset and args.source:
+            commits_source(args.fin, args.dataset, args.source)
     else:
         print('Something wrong with the output file name or year.')
 
