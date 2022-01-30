@@ -3,6 +3,8 @@ import re
 
 import pandas as pd
 
+from tqdm import tqdm
+
 def normalize_commit_data(f):
     """ Normalize commits references """
     # load data
@@ -51,15 +53,51 @@ def normalize_commit_data(f):
 
     print(f"{df.shape[0]} patches were saved to {f}")
 
+
+def collect_commits(fin, fout):
+    """
+        Collects commits references for source code hosting websites 
+        such as github, bitbucket, gitlab and git.
+    """
+    # read the csv
+    df = pd.read_csv(fin)
+
+    # get references to source code hosting websites 
+    for idx, row in tqdm(df.iterrows()):
+        refs = eval(row['refs'])
+        patch_refs = []
+        for ref in refs:
+            found = re.search(r'(github|bitbucket|gitlab|git).*(/commit/|/commits/)', ref)
+            if found: 
+                patch_refs.append(ref)
+        if len(patch_refs) > 0:
+            df.at[idx, 'code_refs'] = str(patch_refs)
+    
+    # filter cases without any references to source code hosting websites
+    df_code_ref = df.dropna(subset=['code_refs'])
+
+    # save data
+    df_code_ref.to_csv(fout, index=False)
+    print(f"{len(df_code_ref)} patches were saved to {fout}")
+
+
+
+
 if __name__ == '__main__':
     
-    parser = argparse.ArgumentParser(description='Clean Commits References')
+    parser = argparse.ArgumentParser(description='CLI to process references')
+    parser.add_argument('--task', dest='format', choices=['normalize', 'commits', 'filter'])    
     parser.add_argument('--fin', type=str, metavar='input file', help='file to clean')
-    
+    parser.add_argument('--fout', type=str, metavar='file', help='new file')
+   
     args = parser.parse_args()
 
-    if args.fin:
-        normalize_commit_data(args.fin)
+    if args.format == 'normalize':
+        if args.fin:
+            normalize_commit_data(args.fin)
+    elif args.format == 'commits':
+        if args.fin and args.fout:
+            collect_commits(args.fin, args.fout)
     else:
         print('Something wrong with the output file name or year.')
 
