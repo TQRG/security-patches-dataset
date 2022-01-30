@@ -5,7 +5,7 @@
 All the datasets provided here are the result of running the scripts available at `../../tools/nvd/` (in case you want to replicate it).
 
 - `all-nvd-patches.csv` integrates all the CVEs data that contain commits logded into `bitbucket`, `gitlab`, `github` or `git`.
-- `github-nvd.csv` integrates all the CVEs data that contain commits logded into `github`. The bash script `../../tools/nvd/filter_data_by_source.sh` can be used to generate the same file for other source code hosting websites such as `bitbucket` and `gitlab`.
+- `github-nvd-patches.csv` integrates all the CVEs data that contain commits logded into `github`. The bash script `../../tools/nvd/filter_data_by_source.sh` can be used to generate the same file for other source code hosting websites such as `bitbucket` and `gitlab`.
   
 In the previous datasets we only consider the CVEs that include references to source code hosting websites. But the entire NVD database is available in a `.csv` file through the following command:
 
