@@ -22,7 +22,8 @@ def get_source(refs):
             sources.append('git')
     return sources
 
-def normalize_commit_data(f):
+
+def normalize_commits(f):
     """ Normalize commits references """
     # load data
     df = pd.read_csv(f)
@@ -81,14 +82,13 @@ def collect_commits(fin, fout):
 
     # get references to source code hosting websites 
     for idx, row in tqdm(df.iterrows()):
-        refs = eval(row['refs'])
-        patch_refs = []
+        refs, commits = eval(row['refs']), []
         for ref in refs:
             found = re.search(r'(github|bitbucket|gitlab|git).*(/commit/|/commits/)', ref)
             if found: 
-                patch_refs.append(ref)
-        if len(patch_refs) > 0:
-            df.at[idx, 'code_refs'] = str(patch_refs)
+                commits.append(ref)
+        if len(commits) > 0:
+            df.at[idx, 'code_refs'] = str(commits)
     
     # filter cases without any references to source code hosting websites
     df_code_ref = df.dropna(subset=['code_refs'])
@@ -131,6 +131,7 @@ def print_commits_stats(fin):
             print(f"{source}\t\t{n_source}\t\t{(n_source/len(sources))*100:.2f}%")
     print(f"{LINE}{LINE}\n")
 
+
 def commits_source(fin, dataset, source):
     # read csv
     df = pd.read_csv(fin)
@@ -153,11 +154,29 @@ def commits_source(fin, dataset, source):
     print(f"{len(df_source)} patches were saved to {fout}")
 
 
+def process_nvd_commits(fin, fout):
+    # read the csv
+    df = pd.read_csv(fin)
+
+    # get references to source code hosting websites 
+    for idx, row in tqdm(df.iterrows()):
+        refs, frefs = eval(row['refs']), []
+        for ref in refs:
+            frefs.append(ref['url'])
+        if len(frefs) > 0:
+            df.at[idx, 'refs'] = set(frefs)
+    
+    # drop rows without refs
+    df = df.dropna(subset=['refs'])
+    df.to_csv(fout, index=False)
+    print(f"{len(df)} patches were saved to {fout}")
+
+
 if __name__ == '__main__':
     
     parser = argparse.ArgumentParser(description='CLI to process references')
     parser.add_argument('--task', dest='format', 
-                                    choices=['normalize', 'commits', 'stats', 'filter'])    
+                                    choices=['normalize', 'commits', 'stats', 'filter', 'process'])    
     parser.add_argument('--fin', type=str, 
                                     metavar='input file', 
                                     help='input file')
@@ -175,7 +194,7 @@ if __name__ == '__main__':
 
     if args.format == 'normalize':
         if args.fin:
-            normalize_commit_data(args.fin)
+            normalize_commits(args.fin)
     elif args.format == 'commits':
         if args.fin and args.fout:
             collect_commits(args.fin, args.fout)
@@ -185,6 +204,9 @@ if __name__ == '__main__':
     elif args.format == 'filter':
         if args.fin and args.dataset and args.source:
             commits_source(args.fin, args.dataset, args.source)
+    elif args.format == 'process':
+        if args.fin and args.fout:
+            process_nvd_commits(args.fin, args.fout)
     else:
         print('Something wrong with the output file name or year.')
 
