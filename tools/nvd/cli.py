@@ -10,7 +10,7 @@ import os
 import pandas as pd
 
 def nvd_extractor(folder, fout):
-
+    """ Extracts raw data from NVD .json files. """
     # create output folder
     if not os.path.exists(fout):
         os.mkdir(fout)
@@ -19,6 +19,7 @@ def nvd_extractor(folder, fout):
     df = pd.DataFrame()
 
     for fname in cve_files:
+        print(fname)
         with open(f"{folder}{fname}") as f:
             cve_items = json.load(f)['CVE_Items']
 
@@ -34,9 +35,10 @@ def nvd_extractor(folder, fout):
             description = cve['cve']['description']['description_data'][0]['value']
 
             if cve['impact']:
-                severity = cve['impact']['baseMetricV2']['severity']
-                exploitability = cve['impact']['baseMetricV2']['exploitabilityScore']
-                impact = cve['impact']['baseMetricV2']['impactScore']
+                if 'baseMetricV2' in cve['impact'].keys():
+                    severity = cve['impact']['baseMetricV2']['severity']
+                    exploitability = cve['impact']['baseMetricV2']['exploitabilityScore']
+                    impact = cve['impact']['baseMetricV2']['impactScore']
 
             published_date = cve['publishedDate']
             last_modified_date = cve['lastModifiedDate']
@@ -46,6 +48,7 @@ def nvd_extractor(folder, fout):
                                 'published_date': published_date, 'last_modified_date': last_modified_date, \
                                 'refs': refs}, ignore_index=True)
         df.to_csv(f"{fout}raw-nvd-data.csv", index=False)
+        df.to_csv(f"{fout}osv-raw-nvd-data.csv", index=False)
 
 def check_if_oss(references):
     refs = set(ref['url'] for ref in references)
@@ -215,19 +218,9 @@ def osv_schema_generator(data):
                 except Exception as e:      
                     print(e)   
 
-def nvd_process(fin, fout):
-    df = pd.read_csv(fin)
-    for idx, row in tqdm(df.iterrows()):
-        refs = set([ref['url'] for ref in eval(row['refs']) \
-                        if 'commit/' in ref['url']])
-        if len(refs) > 0:
-            df.at[idx, 'code_refs'] = refs 
-    # save d
-    df[df['code_refs'].notnull()].to_csv(fout, index=False)
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='NVD database processor.')
-    parser.add_argument('--task', dest='format', choices=['extractor', 'process', 'osv_generator'])
+    parser.add_argument('--task', dest='format', choices=['extractor', 'osv_generator'])
     parser.add_argument('--data', type=str, metavar='input folder', help='base folder')
     parser.add_argument('--fout', type=str, metavar='output folder', help='output folder')
     parser.add_argument('--fin', type=str, metavar='input file', help='input file')
@@ -236,9 +229,6 @@ if __name__ == '__main__':
     if args.format == 'extractor':
       if args.data and args.fout:
         nvd_extractor(args.data, args.fout)
-    elif args.format == 'process':
-      if args.fin and args.fout:
-        nvd_process(args.fin, args.fout)
     elif args.format == 'osv_generator':
       if args.data:
         osv_schema_generator(args.data)
