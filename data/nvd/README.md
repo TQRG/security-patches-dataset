@@ -10,7 +10,7 @@ All the datasets provided here are the result of running the scripts available a
 In the previous datasets we only consider the CVEs that include references to source code hosting websites. But the entire NVD database is available in a `.csv` file through the following command:
 
 ```bash
-TBA
+gdown https://drive.google.com/uc\?id\=1SXaxEPEMZ44M5MAcn9Oy_1lM2uY9KCJc
 ```
 
 The `year/` folder provides the raw data that is download from the NVD website. Therefore, merging all the `.json` files in `year/` will retrieve the same results as the previous command; check `../../tools/nvd/generate_data.sh` to see how.
