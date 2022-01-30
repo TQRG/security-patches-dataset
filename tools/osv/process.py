@@ -11,8 +11,8 @@ from os.path import isfile, join
 def process(ecosystem, fout):
     
     files = [f for f in listdir(ecosystem) if isfile(join(ecosystem, f))]
-
-    osv_path_out = f"{fout}/all_osv_patches.csv"
+    
+    osv_path_out = f"{fout}/raw-osv-data.csv"
     if os.path.exists(osv_path_out):
         df = pd.read_csv(osv_path_out)
     else:
@@ -90,7 +90,7 @@ def process(ecosystem, fout):
 if __name__ == '__main__':
     
     parser = argparse.ArgumentParser(
-        description='Open Source Vulnerability Database Processor (https://osv.dev/)'
+        description='Open Source Vulnerability Database Extractor (https://osv.dev/)'
         )
     parser.add_argument('--ecosystem', 
                         type=str, 

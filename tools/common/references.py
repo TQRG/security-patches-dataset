@@ -138,7 +138,7 @@ def commits_source(fin, dataset, source):
 
     # get commits from source
     for idx, row in df.iterrows():
-        refs, commits = eval(row['refs']), []
+        refs, commits = eval(row['code_refs']), []
         for ref in refs:
             if source in ref:
                 commits.append(ref)

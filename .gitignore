@@ -5,4 +5,4 @@
 tmp/
 data/cve-details/raw-cve-details-data.csv
 data/nvd/raw-nvd-data.csv
-data/nvd/osv-raw-nvd-data.csv
+data/osv/raw-osv-data.csv
