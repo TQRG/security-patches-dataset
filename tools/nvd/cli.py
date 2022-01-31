@@ -14,10 +14,9 @@ def nvd_extractor(folder, fout):
         os.mkdir(fout)
 
     cve_files = [f for f in listdir(folder) if isfile(join(folder, f)) and '.json' in f]
-    df = pd.DataFrame()
+    first = True
 
     for fname in cve_files:
-        print(fname)
         with open(f"{folder}{fname}") as f:
             cve_items = json.load(f)['CVE_Items']
 
@@ -40,11 +39,22 @@ def nvd_extractor(folder, fout):
 
             published_date = cve['publishedDate']
             last_modified_date = cve['lastModifiedDate']
-            df = df.append({'cve_id': cve_id, 'year': year, 'cwes': cwe_ids, \
-                                'description': description, 'severity': severity, \
-                                'exploitability': exploitability, 'impact': impact, \
-                                'published_date': published_date, 'last_modified_date': last_modified_date, \
-                                'refs': refs}, ignore_index=True)
+            cve_data = {'cve_id': cve_id, 
+                        'year': year, 
+                        'cwes': str(cwe_ids), 
+                        'description': description, 
+                        'severity': severity, 
+                        'exploitability': exploitability, 
+                        'impact': impact, 
+                        'published_date': published_date,
+                        'last_modified_date': last_modified_date, 
+                        'refs': str(refs)
+                        }
+            if first:
+                df, first = pd.DataFrame(cve_data, index=[0]), False
+            else:
+                df = pd.concat([df, pd.DataFrame(cve_data, index=[0])], ignore_index=True)
+
         df.to_csv(f"{fout}raw-nvd-data.csv", index=False)
         df.to_csv(f"{fout}osv-raw-nvd-data.csv", index=False)
 

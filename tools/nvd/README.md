@@ -19,7 +19,7 @@ This script will save the data by `year` in `../../data/nvd/year/`.
 2. Download our google cloud mirror by running the following command:
    
 ```bash
-gdown https://drive.google.com/uc\?id\=1SXaxEPEMZ44M5MAcn9Oy_1lM2uY9KCJc
+gdown https://drive.google.com/uc\?id\=18VCNv--uhzmI8NGgOz_9DDCx5sJENUtJ
 ```
 
 ### 2. Generate Dataset
