@@ -20,7 +20,7 @@ This script will retrieve and process all the data for the different ecosystems.
 1. Download our google cloud mirror by running the following command:
    
 ```bash
-TBA
+gdown https://drive.google.com/uc\?id\=1gmKSCDuZwUtXmO41fvXtzvh3Uy0-y25R
 ```
 
 ### 2. Generate Dataset
