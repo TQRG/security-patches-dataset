@@ -8,6 +8,9 @@ from tqdm import tqdm
 from os import listdir
 from os.path import isfile, join
 
+def create_df(vuln_data):
+    return pd.DataFrame(vuln_data, index=[0])
+
 def process(ecosystem, fout):
     
     files = [f for f in listdir(ecosystem) if isfile(join(ecosystem, f))]
@@ -15,21 +18,21 @@ def process(ecosystem, fout):
     osv_path_out = f"{fout}/raw-osv-data.csv"
     if os.path.exists(osv_path_out):
         df = pd.read_csv(osv_path_out)
+        first = False
     else:
-        df = pd.DataFrame()
+        first = True
 
-    count = 0
     for file in files:
         file_path = f"{ecosystem}/{file}"
         with open(file_path) as jfile:
             data = json.load(jfile)
         
-        refs, code_refs = set(), set()
+        refs = set()
         if 'references' in data.keys():
             refs = set([ref['url'] for ref in data['references'] if 'url' in ref.keys()])
-            code_refs = set([ref for ref in refs if 'commit/' in ref or 'commits/' in ref])
         
         introduced, fixed = set(), set()
+        severity, score, cwes = None, None, []
         if 'affected' in data.keys():
             if 'ranges' in data['affected'][0].keys():
                 ranges = data['affected'][0]['ranges']
@@ -45,7 +48,6 @@ def process(ecosystem, fout):
                                 elif 'fixed' in event.keys():
                                     fixed.add(f"{range['repo']}/commit/{event['fixed']}")
             
-            severity, score, cwes = None, None, []
             if 'database_specific' in data['affected'][0].keys():
                 db_spec = data['affected'][0]['database_specific']
                 if 'cwes' in db_spec.keys():
@@ -60,30 +62,30 @@ def process(ecosystem, fout):
                 if 'severity' in eco_spec.keys():
                     severity = eco_spec['severity']
         
-        code_refs = set.union(code_refs, fixed)
+        refs = set.union(refs, fixed)
         
-        if len(code_refs) > 0:
-            vuln_data = {
-                'ecosystem': ecosystem,
+        vuln_data = {
+                'ecosystem': str(ecosystem),
                 'vuln_id': data['id'] if 'id' in data.keys() else data['ghsaId'],
-                'summary': data['summary'] if 'summary' in data.keys() else None,
-                'details': data['details'] if 'details' in data.keys() else None,
-                'aliases': set(data['aliases']) if 'aliases' in data.keys() else None,
+                'summary': str(data['summary'].replace("\r\n"," ").replace("\n"," ")) if 'summary' in data.keys() else None,
+                'details': str(data['details'].replace("\r\n"," ").replace("\n"," ")) if 'details' in data.keys() else None,
+                'aliases': str(set(data['aliases'])) if 'aliases' in data.keys() else None,
                 'modified_date': data['modified'] if 'modified' in data.keys() else data['updatedAt'],
                 'published_date': data['published'] if 'published' in data.keys() else data['publishedAt'],
                 'severity': severity,
                 'score': score,
                 'cwe_id': ','.join(cwes) if len(cwes) > 0 else None,
-                'refs': refs if 'references' in data.keys() else None,
-                'code_refs': code_refs if 'references' in data.keys() else None,
-                'introduced': introduced if len(introduced) > 0 else None
+                'refs': str(refs) if 'references' in data.keys() else None,
+                'introduced': str(introduced) if len(introduced) > 0 else None
             }
-            count += 1
-            df = df.append(vuln_data, ignore_index=True)
-    
-    if count > 0:
-        print(f"+{count} vulnerabilities from {ecosystem}: len={len(df)}")
-        df.to_csv(osv_path_out, index=False)
+
+        if first:
+            df, first = create_df(vuln_data), False
+        else:
+            df = pd.concat([df, create_df(vuln_data)], ignore_index=True)
+            
+    print(f"+{len(files)} vulnerabilities from {ecosystem}: len={len(df)}")
+    df.to_csv(osv_path_out, index=False)
 
     
 

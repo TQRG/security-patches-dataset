@@ -80,6 +80,9 @@ def collect_commits(fin, fout):
     # read the csv
     df = pd.read_csv(fin)
 
+    # drop cases with no refs
+    df = df.dropna(subset=['refs'])
+
     # get references to source code hosting websites 
     for idx, row in tqdm(df.iterrows()):
         refs, commits = eval(row['refs']), []

@@ -1,16 +1,14 @@
 #!/bin/bash
-GITHUB_TOKEN=TOKEN_PLACEHOLDER
+GITHUB_TOKEN=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
 
 dir=../../data/osv/
 rm -rf $dir
 if [[ ! -e $dir ]]; then
     mkdir $dir
-    echo "Creating $dir..."
+    echo "Creating $dir"
 fi
 
 cd osv-schema/tools/ghsa/
-pipenv sync
-pipenv shell
 mkdir ../../../GHSA
 python3 dump_ghsa.py --token $GITHUB_TOKEN ../../../GHSA
 cd ../../..
