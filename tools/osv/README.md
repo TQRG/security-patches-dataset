@@ -9,18 +9,36 @@ All the resulting datasets are available at `../../data/osv/` (in case you want 
 
 The **raw dataset** is not available in this repository. There are two means of getting the dataset:
 
-1. Run the following bash script (`$GITHUB_TOKEN` needs to be assigned inside). It downloads the vulnerabilities from several ecosystems (`GHSA`, `DWF`, `Go`, `Linux`, `Maven`, `NuGet`, `OSS-Fuzz`, `PyPI`, `RubyGems`, `crates.io`, `npm`):
+##### Run the scripts to generate the dataset
+
+1. Set up a GitHub Token. First, copy the github template file:
+
+```bash
+cp config/github_template.json config/github.json 
+```
+
+2. Change the placeholder to a personal github token.
+
+```json
+{
+	"token": "TOKEN_VALUE"
+}
+```
+
+3. Run the following bash script to collect the vulnerabilities from the different ecosystems (`GHSA`, `DWF`, `Go`, `Linux`, `Maven`, `NuGet`, `OSS-Fuzz`, `PyPI`, `RubyGems`, `crates.io`, `npm`):
 
 ```bash
 source download.sh
 ```
 
-This script will retrieve and process all the data for the different ecosystems. We also provide a mirror of the data through Google Cloud.
+This script will retrieve and process all the data for the different ecosystems. 
 
-1. Download our google cloud mirror by running the following command:
+##### Download our mirror
+
+The dataset is available through Google Drive. Download our google drive mirror by running the following command:
    
 ```bash
-gdown https://drive.google.com/uc\?id\=1gmKSCDuZwUtXmO41fvXtzvh3Uy0-y25R
+gdown https://drive.google.com/uc\?id\=1vdLJrUgkjRPk7--0NhmbRrYyVBd2UDdT
 ```
 
 ### 2. Generate Dataset

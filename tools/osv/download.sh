@@ -1,8 +1,8 @@
 #!/bin/bash
-GITHUB_TOKEN=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
+GITHUB_TOKEN=$(jq '.token' config/github.json)
 
 dir=../../data/osv/
-rm -rf $dir
+rm $dir/*.csv
 if [[ ! -e $dir ]]; then
     mkdir $dir
     echo "Creating $dir"
@@ -10,7 +10,7 @@ fi
 
 cd osv-schema/tools/ghsa/
 mkdir ../../../GHSA
-python3 dump_ghsa.py --token $GITHUB_TOKEN ../../../GHSA
+python3 dump_ghsa.py --token "${GITHUB_TOKEN//\"}" ../../../GHSA
 cd ../../..
 echo "Extracting data for GHSA..." 
 python3 process.py --ecosystem=GHSA --fout=$dir

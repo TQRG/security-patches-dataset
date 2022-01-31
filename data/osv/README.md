@@ -10,5 +10,5 @@ All the datasets provided here are the result of running the scripts available a
 In the previous datasets we only consider the vulnerabilities that include references to source code hosting websites. But the entire OSV database is available in a `.csv` file through the following command:
 
 ```bash
-gdown https://drive.google.com/uc\?id\=1gmKSCDuZwUtXmO41fvXtzvh3Uy0-y25R
+gdown https://drive.google.com/uc\?id\=1vdLJrUgkjRPk7--0NhmbRrYyVBd2UDdT
 ```
