@@ -9,3 +9,5 @@ gitpython
 PyGithub
 requests
 gdown
+pygit2
+gsutil

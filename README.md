@@ -4,36 +4,32 @@ This repository integrates datasets from different sources and research papers. 
 
 Release 1: Code [here](https://github.com/TQRG/security-patches-dataset/tree/3d974be51e955b211c02a16b520cc5c7a10704ae); Paper [here](https://arxiv.org/abs/2110.09635)
 
-**Datasets:**
-- [X] [CVEDetails](https://www.cvedetails.com/) - Includes data from CVEs from 1999 to 2021 (6486 patches) -- last update: 17-01-2022.
-- [X] [SecBench](https://github.com/TQRG/secbench) - Dataset with 687 patches for different programming languages.
+CVEDetails, NVD and OSV data are updated monthly.
+
+**Sources:**
+- [X] [CVEDetails](https://www.cvedetails.com/) - Includes data from CVEs from 1999 to 2022; 6536 patches with github commits -- last update: 17-01-2022.
+- [X] [NVD](https://nvd.nist.gov/) - Includes all the data provided by the National Vulnerability Database -- last update: 22-01-2022.
+- [X] [OSV](https://osv.dev/) - Project maintained by Google. It integrates vulnerabilities from different ecosystems: `DWF`, `Go`, `Linux`, `Maven`, `NuGet`, `OSS-Fuzz`, `PyPI`, `RubyGems`, `crates.io`, `npm`.
+  
+**Research Datasets:**
+- [X] [SecBench](https://github.com/TQRG/secbench) - Dataset with 687 patches for different programming languages; all patches integrate github commits.
 - [X] [BigVul](https://github.com/ZeoVan/MSR_20_Code_vulnerability_CSV_Dataset)
 - [X] [SAP](https://github.com/SAP/project-kb/tree/master/MSR2019)
 - [X] [Devign](https://sites.google.com/view/devign) - FFmpeg and Qemu commits ()
-- [X] [OSV](https://osv.dev/) - Project maintained by Google. It integrates vulnerabilities from 
-different ecosystems: `DWF`, `Go`, `Linux`, `Maven`, `NuGet`, `OSS-Fuzz`, `PyPI`, `RubyGems`, `crates.io`, `npm`.
+
 
 
 ### Installation
 
-Requirements installation:
+Configure environment to run the scripts:
 
+```bash
+conda create --name sec-patches --file requirements.txt
+conda activate sec-patches
 ```
-virtualenv --python=python3.8 venv
-source venv/bin/activate
-pip install -r requirements.txt
-```
-
-### Data Analysis 
 
 
 
-<!-- Clean cve_details data:
-```
-source venv/bin/activate
-cd scraper
-python3 clean_data.py -file cve_details.csv
-``` -->
 
 ### Dataset
 
