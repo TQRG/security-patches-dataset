@@ -1,8 +1,10 @@
 *.DS_Store
 *__pycache__/
 *.ipynb_checkpoints/
-*.json
+data/*.json
 tmp/
 data/cve-details/raw-cve-details-data.csv
 data/nvd/raw-nvd-data.csv
 data/osv/raw-osv-data.csv
+data/nvd/osv-raw-nvd-data.csv
+*github.json
