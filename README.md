@@ -10,16 +10,16 @@ If you want us to add a new dataset, open an issue.
 
 **Sources:**
 - [X] [CVEDetails](https://www.cvedetails.com/) - CVEs data from 1999 to 2022.
-- [X] [NVD](https://nvd.nist.gov/) - CVEs data provided by the National Vulnerability Database from 2002 to 2022.
-- [X] [OSV](https://osv.dev/) - Project maintained by Google. Open-source vulnerabilities from different ecosystems: `GHSA`, `DWF`, `Go`, `Linux`, `Maven`, `NuGet`, `OSS-Fuzz`, `PyPI`, `RubyGems`, `crates.io`, `npm`.
+- [X] [NVD](https://nvd.nist.gov/) (☠️ 7316 CVEs) - CVEs data provided by the National Vulnerability Database from 2002 to 2022.
+- [X] [OSV](https://osv.dev/) (☠️ 4125 CVEs) - Project maintained by Google. Open-source vulnerabilities from different ecosystems: `GHSA`, `DWF`, `Go`, `Linux`, `Maven`, `NuGet`, `OSS-Fuzz`, `PyPI`, `RubyGems`, `crates.io`, `npm`.
   
 Sources data is updated monthly (last update: 31-01-2022).
   
 **Research Datasets:**
-- [X] [SecBench](https://github.com/TQRG/secbench) - Dataset with 687 single-patches for different programming languages.
-- [X] [BigVul](https://github.com/ZeoVan/MSR_20_Code_vulnerability_CSV_Dataset)
-- [X] [SAP](https://github.com/SAP/project-kb/tree/master/MSR2019)
-- [X] [Devign](https://sites.google.com/view/devign) 
+- [X] [SecBench](https://github.com/TQRG/secbench) (☠️ 676 vulns, 🔗 676 commits) - Dataset of single-patches for different programming languages.
+- [X] [BigVul](https://github.com/ZeoVan/MSR_20_Code_vulnerability_CSV_Dataset) (🔗 4432 commits) - C/C++ vulnerabilities.
+- [X] [SAP](https://github.com/SAP/project-kb/tree/master/MSR2019) (☠️ 1288 vulns, 🔗 1288 commits) - Java vulnerabilities. 
+- [X] [Devign](https://sites.google.com/view/devign) (🔗 10894 commits) - C/C++ vulnerabilities. 
 
 Datasets that only consider vulnerabilities with patches available through GitHub.
 
