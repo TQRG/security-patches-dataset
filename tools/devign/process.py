@@ -17,7 +17,6 @@ def process(root_folder, projects):
     df.drop('vulnerability', inplace=True, axis=1)
     df.to_csv(f"{root_folder}/github-devign-patches.csv", index=False)
 
-    
 
 if __name__ == '__main__':
     
