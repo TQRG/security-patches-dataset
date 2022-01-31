@@ -11,3 +11,6 @@ requests
 gdown
 pygit2
 gsutil
+upsetplot
+venn
+seaborn
