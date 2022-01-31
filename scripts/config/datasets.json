@@ -1,6 +1,9 @@
 {
-	"pontas": "sources/pontas_msr19.csv",
-	"cve_details": "sources/cve_details.csv",
-	"secbench": "sources/secbench_secse17.csv",
-	"big_vul": "sources/big_vul_msr20.csv"
+	"sap": "github-patches/pontas_msr19.csv",
+	"secbench": "github-patches/secbench_secse17.csv",
+	"big_vul": "github-patches/big_vul_msr20.csv",
+	"devign": "github-patches/devign_neurips19.csv",
+	"nvd": "github-patches/nvd.csv",
+	"osv": "github-patches/osv.csv",
+	"cve_details": "github-patches/cve_details.csv"
 }
