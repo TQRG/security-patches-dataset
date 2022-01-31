@@ -10,10 +10,10 @@ If you want us to add a new dataset, open an issue.
 
 **Sources:**
 - [X] [CVEDetails](https://www.cvedetails.com/) - CVEs data from 1999 to 2022.
-- [X] [NVD](https://nvd.nist.gov/) - CVEs data provided by the National Vulnerability Database from 2002 to 2022 (last update: 31-01-2022).
-- [X] [OSV](https://osv.dev/) - Project maintained by Google. Open-source vulnerabilities from different ecosystems: `GHSA`, `DWF`, `Go`, `Linux`, `Maven`, `NuGet`, `OSS-Fuzz`, `PyPI`, `RubyGems`, `crates.io`, `npm` (last update: 31-01-2022).
+- [X] [NVD](https://nvd.nist.gov/) - CVEs data provided by the National Vulnerability Database from 2002 to 2022.
+- [X] [OSV](https://osv.dev/) - Project maintained by Google. Open-source vulnerabilities from different ecosystems: `GHSA`, `DWF`, `Go`, `Linux`, `Maven`, `NuGet`, `OSS-Fuzz`, `PyPI`, `RubyGems`, `crates.io`, `npm`.
   
-Sources data is updated monthly.
+Sources data is updated monthly (last update: 31-01-2022).
   
 **Research Datasets:**
 - [X] [SecBench](https://github.com/TQRG/secbench) - Dataset with 687 single-patches for different programming languages.
