@@ -124,7 +124,7 @@ def print_commits_stats(fin):
     for s in df['code_refs'].transform(get_source):
         sources += s
 
-    print(f"{LINE}{LINE}\nSOURCE\t\tpatches (#)\tpatches (%)\n{LINE}{LINE}")
+    print(f"{LINE}{LINE}\nSOURCE\t\tcommits (#)\tcommits (%)\n{LINE}{LINE}")
     # iterate over the different sources 
     for source in set(sources):
         n_source = len([s for s in sources if s == source])
