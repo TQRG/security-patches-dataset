@@ -20,6 +20,8 @@ def get_source(refs):
             sources.append('gitlab')
         elif 'git' in ref:
             sources.append('git')
+        else:
+            sources.append('other')
     return sources
 
 
@@ -71,6 +73,13 @@ def normalize_commits(f):
 
     print(f"{df.shape[0]} patches were saved to {f}")
 
+def normalize_refs(ref):
+    if "{" in ref:
+        if len(eval(ref)) == 0:
+            return np.nan
+        else:
+            return eval(ref)
+    return set([ref])
 
 def collect_commits(fin, fout):
     """
@@ -80,18 +89,21 @@ def collect_commits(fin, fout):
     # read the csv
     df = pd.read_csv(fin)
 
+    # normalize refs
+    df['refs'] = df['refs'].apply(lambda ref: normalize_refs(ref))
+
     # drop cases with no refs
     df = df.dropna(subset=['refs'])
 
     # get references to source code hosting websites 
     for idx, row in tqdm(df.iterrows()):
-        refs, commits = eval(row['refs']), []
-        for ref in refs:
+        commits = []
+        for ref in row['refs']:
             found = re.search(r'(github|bitbucket|gitlab|git).*(/commit/|/commits/)', ref)
             if found: 
                 commits.append(ref)
         if len(commits) > 0:
-            df.at[idx, 'code_refs'] = str(commits)
+            df.at[idx, 'code_refs'] = str(set(commits))
     
     # filter cases without any references to source code hosting websites
     df_code_ref = df.dropna(subset=['code_refs'])
@@ -146,7 +158,9 @@ def commits_source(fin, dataset, source):
             if source in ref:
                 commits.append(ref)
         if len(commits) > 0:
-            df.at[idx, 'commits'] = set(commits)
+            df.at[idx, 'commits'] = str(set(commits))
+        else:
+            df.at[idx, 'commits'] = np.nan
     
     # drop rows without commits for source
     df_source = df.dropna(subset=['commits'])
