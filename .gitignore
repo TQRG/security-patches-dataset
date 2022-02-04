@@ -9,3 +9,4 @@ data/osv/raw-osv-data.csv
 data/nvd/osv-raw-nvd-data.csv
 *github.json
 data/nvd/year/*.json
+data/big-vul/big-vul-msr20.csv
