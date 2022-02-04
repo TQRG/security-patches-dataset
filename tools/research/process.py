@@ -8,20 +8,23 @@ from tqdm import tqdm
 from os import listdir
 from os.path import isfile, join
 
-def devign(root_folder, projects):
-    
+def devign(root_folder, projects):  
     files = [f for f in listdir(projects) if isfile(join(projects, f))]
-    
+
     df = pd.concat([pd.read_csv(f"{projects}/{file}") for file in files])
     df = df[df['vulnerability'] == 1]
     df.drop('vulnerability', inplace=True, axis=1)
     df.to_csv(f"{root_folder}/github-devign-patches.csv", index=False)
 
 def big_vul(root_folder, fin):
-
     df = pd.read_csv(f"{root_folder}/{fin}")
-    df = df[df['ref_link'].str.contains("github.com")]
-    df.to_csv(f"{root_folder}/github-big-vul-patches.csv", index=False)
+    df = df.rename(columns={'ref_link': 'refs'})
+    df.to_csv(f"{root_folder}/all-big-vul-patches.csv", index=False)
+
+def sap(root_folder, fin):
+    df = pd.read_csv(f"{root_folder}/{fin}")
+    df['refs'] = df.apply(lambda x: f"{x['project']}/commit/{x['sha']}", axis=1)
+    df.to_csv(f"{root_folder}/all-sap-patches.csv", index=False)
 
 
 if __name__ == '__main__':
@@ -53,8 +56,10 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     if args.root_folder and args.projects and args.name == 'devign':
-        devign(args.root_folder, args.projects, args.name)
+        devign(args.root_folder, args.projects)
     elif args.root_folder and args.fin and args.name == 'big_vul':  
         big_vul(args.root_folder, args.fin)
+    elif args.root_folder and args.fin and args.name == 'sap':  
+        sap(args.root_folder, args.fin)
     else:
         print('Something is wrong.')
