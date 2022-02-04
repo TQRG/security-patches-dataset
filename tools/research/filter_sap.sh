@@ -1,12 +1,13 @@
 #!/bin/bash
 PYTHON=python3
 OUTPUT_FOLDER=../../data/sap
-RAW_DATA_FILENAME=pontas-msr19.csv
-COMMITS_DATA_FILENAME=all-sap-patches.csv
+RAW_DATA_FILENAME=pontas-sap-msr19.csv
+COMMITS_DATA_FILENAME=all-pontas-sap-patches.csv
 DATASET=sap
 
 python3 process.py --root-folder=$OUTPUT_FOLDER \
                     --fin=$RAW_DATA_FILENAME \
+                    --fout=$COMMITS_DATA_FILENAME \
                     --name=$DATASET
 
 echo "\nGetting the commits references to github, bitbucket, gitlab and git..."

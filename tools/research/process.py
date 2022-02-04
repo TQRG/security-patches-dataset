@@ -1,9 +1,5 @@
-import json
 import argparse
-import os
-
 import pandas as pd
-from tqdm import tqdm
 
 from os import listdir
 from os.path import isfile, join
@@ -21,10 +17,10 @@ def big_vul(root_folder, fin):
     df = df.rename(columns={'ref_link': 'refs'})
     df.to_csv(f"{root_folder}/all-big-vul-patches.csv", index=False)
 
-def sap(root_folder, fin):
+def sap(root_folder, fin, fout):
     df = pd.read_csv(f"{root_folder}/{fin}")
     df['refs'] = df.apply(lambda x: f"{x['project']}/commit/{x['sha']}", axis=1)
-    df.to_csv(f"{root_folder}/all-sap-patches.csv", index=False)
+    df.to_csv(f"{root_folder}/{fout}", index=False)
 
 
 if __name__ == '__main__':
@@ -38,6 +34,11 @@ if __name__ == '__main__':
                         help='folder where the data is available'
                         )
     parser.add_argument('--fin', 
+                        type=str, 
+                        metavar='input file', 
+                        help='file where the data is available'
+                        )
+    parser.add_argument('--fout', 
                         type=str, 
                         metavar='input file', 
                         help='file where the data is available'
@@ -59,7 +60,7 @@ if __name__ == '__main__':
         devign(args.root_folder, args.projects)
     elif args.root_folder and args.fin and args.name == 'big_vul':  
         big_vul(args.root_folder, args.fin)
-    elif args.root_folder and args.fin and args.name == 'sap':  
-        sap(args.root_folder, args.fin)
+    elif args.root_folder and args.fin and args.fout and args.name == 'sap':  
+        sap(args.root_folder, args.fin, args.fout)
     else:
         print('Something is wrong.')
