@@ -178,12 +178,10 @@ def osv_schema_generator(data):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='OSV Schema Generator')
-    parser.add_argument('--task', dest='format', choices=['osv_generator'])
     parser.add_argument('--data', type=str, metavar='input folder', help='base folder')
     
     args = parser.parse_args()
-    if args.format == 'osv_generator':
-      if args.data:
+    if args.data:
         osv_schema_generator(args.data)
     else:
         print('Something is wrong. Verify your parameters.')
