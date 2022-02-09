@@ -1,9 +1,9 @@
 {
-	"sap": "github-commits/sap.csv",
-	"secbench": "github-commits/secbench.csv",
-	"big_vul": "github-commits/big_vul.csv",
-	"devign": "github-commits/devign.csv",
-	"nvd": "sources/nvd.csv",
-	"osv": "sources/osv.csv",
-	"cve_details": "sources/cve_details.csv"
+	"sap": "commits/sap.csv",
+	"secbench": "commits/secbench.csv",
+	"big_vul": "commits/big_vul.csv",
+	"devign": "commits/devign.csv",
+	"osv": "commits/osv.csv",
+	"nvd": "commits/nvd.csv",
+	"cve_details": "commits/cve_details.csv"
 }
