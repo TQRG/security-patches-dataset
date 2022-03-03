@@ -2,6 +2,7 @@
 GITHUB_TOKEN=$(jq '.token' config/github.json)
 
 dir=../../data/osv/
+file=raw-osv-data.csv
 rm $dir/*.csv
 if [[ ! -e $dir ]]; then
     mkdir $dir
@@ -13,7 +14,7 @@ mkdir ../../../GHSA
 python3 dump_ghsa.py --token "${GITHUB_TOKEN//\"}" ../../../GHSA
 cd ../../..
 echo "Extracting data for GHSA..." 
-python3 process.py --ecosystem=GHSA --fout=$dir
+python3 process.py --ecosystem=GHSA --fout=$dir/$file
 rm -rf GHSA
 
 ECOSYSTEMS=("DWF" "Go" "Linux" "Maven" "NuGet" "OSS-Fuzz" \
@@ -25,7 +26,7 @@ for ecosystem in "${ECOSYSTEMS[@]}"; do
     unzip $ecosystem.zip -d $ecosystem
     rm $ecosystem.zip
     echo "Extracting data for $ecosystem..." 
-    python3 process.py --ecosystem=$ecosystem --fout=$dir
+    python3 process.py --ecosystem=$ecosystem --fout=$dir/$file
     rm -rf $ecosystem
 done
 
