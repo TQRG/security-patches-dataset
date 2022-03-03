@@ -1,72 +1,107 @@
 import argparse
-import json
-import os
-from os import listdir
-from os.path import isfile, join
+import csv
 
 import pandas as pd
+import numpy as np
 from tqdm import tqdm
 
+import utils
+
+
 def nvd_extractor(folder, fout):
-    """ Extracts raw data from NVD .json files. """
+    """Extracts raw data from NVD .json files."""
+
+    def get_cwes(data):
+        cwes = set()
+        for data in cve["cve"]["problemtype"]["problemtype_data"]:
+            for cwe in data["description"]:
+                cwes.add(cwe["value"])
+        return str(cwes) if len(cwes) > 0 else np.nan
+
+    def get_cve(data):
+        return data["cve"]["CVE_data_meta"]["ID"]
+
+    def get_description(data):
+        return data["cve"]["description"]["description_data"][0]["value"]
+
+    def get_published_date(data):
+        return data["publishedDate"]
+
+    def get_last_modified_date(data):
+        return data["lastModifiedDate"]
+
+    def get_severity(data):
+        if data["impact"]:
+            if "baseMetricV2" in data["impact"].keys():
+                return data["impact"]["baseMetricV2"]["severity"]
+        return np.nan
+
+    def get_exploitability(data):
+        if data["impact"]:
+            if "baseMetricV2" in data["impact"].keys():
+                return cve["impact"]["baseMetricV2"]["exploitabilityScore"]
+        return np.nan
+
+    def get_impact(data):
+        if data["impact"]:
+            if "baseMetricV2" in data["impact"].keys():
+                return data["impact"]["baseMetricV2"]["impactScore"]
+        return np.nan
+
+    def get_references(data):
+        refs = set()
+        for ref in data["cve"]["references"]["reference_data"]:
+            refs.add(ref["url"])
+        return str(refs) if len(refs) > 0 else np.nan
+
     # create output folder
-    if not os.path.exists(fout):
-        os.mkdir(fout)
+    utils.create_output(fout)
+    reports, first = utils.get_vulns_reports(folder), True
 
-    cve_files = [f for f in listdir(folder) if isfile(join(folder, f)) and '.json' in f]
-    first = True
+    for fname in reports:
 
-    for fname in cve_files:
-        with open(f"{folder}{fname}") as f:
-            cve_items = json.load(f)['CVE_Items']
+        cves = utils.load_json_files(folder, fname)
 
-        for cve in tqdm(cve_items):
-            cve_id = cve['cve']['CVE_data_meta']['ID']
-            year = cve_id.split('-')[1]
+        for cve in tqdm(cves):
 
-            for data in cve['cve']['problemtype']['problemtype_data']:
-                cwe_ids = set([cwe['value'] for cwe in data['description']])
-            
-            refs = cve['cve']['references']['reference_data']
-            
-            description = cve['cve']['description']['description_data'][0]['value']
+            cve_data = {
+                "cve_id": get_cve(cve),
+                "cwes": get_cwes(cve),
+                "description": get_description(cve),
+                "severity": get_severity(cve),
+                "exploitability": get_exploitability(cve),
+                "impact": get_impact(cve),
+                "published_date": get_published_date(cve),
+                "last_modified_date": get_last_modified_date(cve),
+                "refs": get_references(cve),
+            }
 
-            if cve['impact']:
-                if 'baseMetricV2' in cve['impact'].keys():
-                    severity = cve['impact']['baseMetricV2']['severity']
-                    exploitability = cve['impact']['baseMetricV2']['exploitabilityScore']
-                    impact = cve['impact']['baseMetricV2']['impactScore']
-
-            published_date = cve['publishedDate']
-            last_modified_date = cve['lastModifiedDate']
-            cve_data = {'cve_id': cve_id, 
-                        'year': year, 
-                        'cwes': str(cwe_ids), 
-                        'description': description, 
-                        'severity': severity, 
-                        'exploitability': exploitability, 
-                        'impact': impact, 
-                        'published_date': published_date,
-                        'last_modified_date': last_modified_date, 
-                        'refs': str(refs)
-                        }
             if first:
                 df, first = pd.DataFrame(cve_data, index=[0]), False
             else:
-                df = pd.concat([df, pd.DataFrame(cve_data, index=[0])], ignore_index=True)
+                df = pd.concat(
+                    [df, pd.DataFrame(cve_data, index=[0])], ignore_index=True
+                )
 
-        df.to_csv(f"{fout}raw-nvd-data.csv", index=False)
-        df.to_csv(f"{fout}osv-raw-nvd-data.csv", index=False)
+        print(df)
+        df.to_csv(
+            f"{fout}raw-nvd-data.csv",
+            quoting=csv.QUOTE_NONNUMERIC,
+            escapechar="\\",
+            doublequote=False,
+            index=False,
+        )
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='NVD Database extractor.')
-    parser.add_argument('--task', dest='format', choices=['extractor', 'osv_generator'])
-    parser.add_argument('--data', type=str, metavar='input folder', help='base folder')
-    parser.add_argument('--fout', type=str, metavar='output folder', help='output folder')
-    
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="NVD Database extractor.")
+    parser.add_argument("--task", dest="format", choices=["extractor", "osv_generator"])
+    parser.add_argument("--data", type=str, metavar="input folder", help="base folder")
+    parser.add_argument("--fout", type=str, metavar="output file", help="output file")
+
     args = parser.parse_args()
-    if args.format == 'extractor':
-      if args.data and args.fout:
-        nvd_extractor(args.data, args.fout)
+    if args.format == "extractor":
+        if args.data and args.fout:
+            nvd_extractor(args.data, args.fout)
     else:
-        print('Something is wrong. Verify your parameters.')
+        print("Something is wrong. Verify your parameters.")

@@ -219,14 +219,6 @@ def commits_source(fin, dataset, source):
 def process_nvd_commits(fin, fout):
     # read the csv
     df = pd.read_csv(fin, escapechar="\\")
-
-    # get references to source code hosting websites 
-    for idx, row in tqdm(df.iterrows()):
-        refs, frefs = eval(row['refs']), []
-        for ref in refs:
-            frefs.append(ref['url'])
-        if len(frefs) > 0:
-            df.at[idx, 'refs'] = set(frefs)
     
     # drop rows without refs
     df = df.dropna(subset=['refs'])
