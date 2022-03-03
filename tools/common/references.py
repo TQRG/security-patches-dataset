@@ -1,5 +1,7 @@
 import argparse
+import csv
 import re
+import csv
 
 import pandas as pd
 import numpy as np
@@ -24,11 +26,30 @@ def get_source(refs):
             sources.append('other')
     return sources
 
+def split_commits(chain):
+    
+    new_chain = set()
+    for ref in eval(chain):
+        if 'http://' in ref:
+            protocol = 'http://'
+        else:
+            protocol = 'https://'
+
+        count = ref.count(protocol)
+        if count > 1:
+            if ',' in ref:
+                new_chain = set.union(new_chain, set([r for r in ref.split(',')]))
+            else:
+                new_chain = set.union(new_chain, set([f"{protocol}{r}" for r in ref.split(protocol)]))
+        else:
+            new_chain = set.union(new_chain, set([ref]))
+    return new_chain if len(new_chain) > 0 else np.nan
+
 
 def normalize_commits(f):
     """ Normalize commits references """
     # load data
-    df = pd.read_csv(f)
+    df = pd.read_csv(f, escapechar="\\")
 
     # iterate over each row
     for idx, row in df.iterrows():
@@ -69,17 +90,13 @@ def normalize_commits(f):
     df = df.dropna(subset=['code_refs'])
 
     # save new dataframe
-    df.to_csv(f, index=False)
+    df.to_csv(f, 
+              quoting=csv.QUOTE_NONNUMERIC, 
+              escapechar="\\", 
+              doublequote=False, 
+              index=False)
 
     print(f"{df.shape[0]} patches were saved to {f}")
-
-def normalize_refs(ref):
-    if "{" in ref:
-        if len(eval(ref)) == 0:
-            return np.nan
-        else:
-            return eval(ref)
-    return set([ref])
 
 def collect_commits(fin, fout):
     """
@@ -87,13 +104,13 @@ def collect_commits(fin, fout):
         such as github, bitbucket, gitlab and git.
     """
     # read the csv
-    df = pd.read_csv(fin)
-
-    # normalize refs
-    df['refs'] = df['refs'].apply(lambda ref: normalize_refs(ref))
+    df = pd.read_csv(fin, escapechar="\\")
 
     # drop cases with no refs
     df = df.dropna(subset=['refs'])
+
+    # normalize refs
+    df['refs'] = df['refs'].apply(lambda ref: split_commits(ref))
 
     # get references to source code hosting websites 
     for idx, row in tqdm(df.iterrows()):
@@ -109,7 +126,11 @@ def collect_commits(fin, fout):
     df_code_ref = df.dropna(subset=['code_refs'])
 
     # save data
-    df_code_ref.to_csv(fout, index=False)
+    df_code_ref.to_csv(fout, 
+                        quoting=csv.QUOTE_NONNUMERIC, 
+                        escapechar="\\", 
+                        doublequote=False, 
+                        index=False)
     print(f"{len(df_code_ref)} patches were saved to {fout}")
 
 
@@ -120,7 +141,7 @@ def print_commits_stats(fin):
         return len(eval(x))
 
     # read the csv
-    df = pd.read_csv(fin)
+    df = pd.read_csv(fin, escapechar="\\")
 
     # get number of commits involved in each patch
     df['n_commits'] = df['code_refs'].transform(set_len)
@@ -149,7 +170,7 @@ def print_commits_stats(fin):
 
 def commits_source(fin, dataset, source):
     # read csv
-    df = pd.read_csv(fin)
+    df = pd.read_csv(fin, escapechar="\\")
 
     # get commits from source
     for idx, row in df.iterrows():
@@ -167,13 +188,18 @@ def commits_source(fin, dataset, source):
 
     # save patches
     fout = f'../../data/{dataset}/{source}-{dataset}-patches.csv'
-    df_source.to_csv(fout, index=False)
+    
+    df_source.to_csv(fout, 
+                        quoting=csv.QUOTE_NONNUMERIC, 
+                        escapechar="\\", 
+                        doublequote=False, 
+                        index=False)
     print(f"{len(df_source)} patches were saved to {fout}")
 
 
 def process_nvd_commits(fin, fout):
     # read the csv
-    df = pd.read_csv(fin)
+    df = pd.read_csv(fin, escapechar="\\")
 
     # get references to source code hosting websites 
     for idx, row in tqdm(df.iterrows()):
@@ -185,7 +211,11 @@ def process_nvd_commits(fin, fout):
     
     # drop rows without refs
     df = df.dropna(subset=['refs'])
-    df.to_csv(fout, index=False)
+    df.to_csv(fout, 
+                quoting=csv.QUOTE_NONNUMERIC, 
+                escapechar="\\", 
+                doublequote=False, 
+                index=False)    
     print(f"{len(df)} patches were saved to {fout}")
 
 
