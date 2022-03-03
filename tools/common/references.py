@@ -27,7 +27,16 @@ def get_source(refs):
     return sources
 
 def split_commits(chain):
+    """ Normalizes the chain of commits for each CVE
+        e.g., from link1,link2 to {link1, link2}.
     
+    Args:
+        chain (string): chain of commits
+
+    Returns:
+        new_chain: set of commits normalized
+    """
+
     new_chain = set()
     for ref in eval(chain):
         if 'http://' in ref:
@@ -47,7 +56,9 @@ def split_commits(chain):
 
 
 def normalize_commits(f):
-    """ Normalize commits references """
+    """ 
+        Normalize commits references
+    """
     # load data
     df = pd.read_csv(f, escapechar="\\")
 
@@ -59,21 +70,21 @@ def normalize_commits(f):
 
         # iterate over references
         for ref in refs:
-            # e.g., https://github.com/openstack/heat-templates/commit/65a4f8bebc72da71c616e2e378b7b1ac354db1a3CONFIRM:
+            # e.g., https://github.com/{owner}/{repo}/commit/{sha}CONFIRM:
             if "CONFIRM:" in ref:
                 commits.append(ref.replace("CONFIRM:", ''))
             # e.g., https://github.com/intelliants/subrion/commits/develop
             # e.g., https://gitlab.gnome.org/GNOME/gthumb/commits/master/extensions/cairo_io/cairo-image-surface-jpeg.c
-            # e.g., https://github.com/alkacon/opencms-core/commits/branch_10_5_x
+            # e.g., https://github.com/{owner}/{repo}/commits/{branch}
             elif not re.search(r"\b[0-9a-f]{5,40}\b", ref): 
                 continue     
-            # e.g., https://github.com/gnuboard/gnuboard5/commits/master?after=831219e2c233b2d721a049b7aeb054936d000dc2+69          
+            # e.g., https://github.com/{owner}/{repo}/commits/master?after={sha}+{no_commits}          
             elif '/master?' in ref:
                 continue   
-            # e.g., https://github.com/roundcube/roundcubemail/commit/40d7342dd9c9bd2a1d613edc848ed95a4d71aa18#commitcomment-15294218          
+            # e.g., https://github.com/{owner}/{repo}/commit/{sha}#commitcomment-{id}          
             elif '#' in ref and ('#comments' in ref or '#commitcomment' in ref):
                 commits.append(ref.split('#')[0])
-            # e.g., https://github.com/fedora-infra/python-fedora/commit/b27f38a67573f4c989710c9bfb726dd4c1eeb929.patch
+            # e.g., https://github.com/{owner}/{repo}/commit/{sha}.patch
             elif '.patch' in ref:
                 commits.append(ref.replace('.patch',''))
             # e.g., https://github.com/absolunet/kafe/commit/c644c798bfcdc1b0bbb1f0ca59e2e2664ff3fdd0%23diff-f0f4b5b19ad46588ae9d7dc1889f681252b0698a4ead3a77b7c7d127ee657857
@@ -97,6 +108,7 @@ def normalize_commits(f):
               index=False)
 
     print(f"{df.shape[0]} patches were saved to {f}")
+
 
 def collect_commits(fin, fout):
     """
@@ -169,6 +181,13 @@ def print_commits_stats(fin):
 
 
 def commits_source(fin, dataset, source):
+    """Infer commits source (e.g., git, github, bitbucket, gitlab, etc).
+
+    Args:
+        fin (string): name of the file that contains the commits data
+        dataset (string): dataset name
+        source (string): git, github, bibucket, gitlab
+    """
     # read csv
     df = pd.read_csv(fin, escapechar="\\")
 
