@@ -83,7 +83,6 @@ def nvd_extractor(folder, fout):
                     [df, pd.DataFrame(cve_data, index=[0])], ignore_index=True
                 )
 
-        print(df)
         df.to_csv(
             f"{fout}raw-nvd-data.csv",
             quoting=csv.QUOTE_NONNUMERIC,
