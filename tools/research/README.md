@@ -1,7 +1,7 @@
 Collect all the research datasets:
 
 ```bash
-source collect.sh
+source download.sh
 ```
 
 Filter Big-Vul:
