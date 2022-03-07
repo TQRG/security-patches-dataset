@@ -1,4 +1,4 @@
-Collect all the research datasets:
+Collect all the research datasets (SecBench, Big-Vul, SAP, Devign):
 
 ```bash
 source download.sh
