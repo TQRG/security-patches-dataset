@@ -54,7 +54,6 @@ def split_commits(chain):
             new_chain = set.union(new_chain, set([ref]))
     return new_chain if len(new_chain) > 0 else np.nan
 
-
 def normalize_commits(f):
     """ 
         Normalize commits references
@@ -78,6 +77,8 @@ def normalize_commits(f):
             # e.g., https://github.com/{owner}/{repo}/commits/{branch}
             elif not re.search(r"\b[0-9a-f]{5,40}\b", ref): 
                 continue     
+            elif 'git://' in ref and 'github.com' in ref:
+                commits.append(ref.replace('git://', 'https://'))
             # e.g., https://github.com/{owner}/{repo}/commits/master?after={sha}+{no_commits}          
             elif '/master?' in ref:
                 continue   
@@ -120,9 +121,11 @@ def collect_commits(fin, fout):
 
     # drop cases with no refs
     df = df.dropna(subset=['refs'])
-
     # normalize refs
     df['refs'] = df['refs'].apply(lambda ref: split_commits(ref))
+    
+    # drop cases with no refs
+    df = df.dropna(subset=['refs'])
 
     # get references to source code hosting websites 
     for idx, row in tqdm(df.iterrows()):
