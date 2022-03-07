@@ -1,12 +1,19 @@
+Organize resources:
+
+```bash
+source from_patches_to_commits.sh
+```
+
+
 Process sources data (nvd, cve_details, osv):
 
-```
+```bash
 python3 scripts/cli.py --task=process --folder=commits
 ```
 
 Merge and clean duplicates from sources (nvd, cve_details, osv):
 
-```
+```bash
 python3 scripts/cli.py --task=merge --folder=dataset
 ```
 
