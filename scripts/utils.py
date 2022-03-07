@@ -1,8 +1,10 @@
 import json
 import os 
 import shutil
+import time
 
 from pathlib import Path
+from github import Github
 
 
 def read_config(file_path):
@@ -15,6 +17,15 @@ def load_config(filename):
     with open("{}/{}".format(Path(__file__).parent.absolute(), filename)) as config:
         data = json.load(config)
     return data
+
+def get_token(tokens):
+    for token in tokens:
+        git = Github(token['github_token'])
+        if git.rate_limiting[0] > 0:
+            print(f"Using {token['github_username']}'s token {git.rate_limiting}...")
+            return git
+    print(f"No tokens available. Waiting 1h...")
+    time.sleep(3610)
 
 def archive_vuln(path, repo):
     with open(path, 'wb') as vv:
@@ -38,6 +49,6 @@ def check_if_dir_exists(path):
     if not os.path.exists(d):
         os.makedirs(d)
 
-def make_tarfile(output_filename, source_dir):
-    with tarfile.open(output_filename, "w") as tar:
-        tar.add(source_dir, arcname=os.path.basename(source_dir))
+# def make_tarfile(output_filename, source_dir):
+#     with tarfile.open(output_filename, "w") as tar:
+#         tar.add(source_dir, arcname=os.path.basename(source_dir))
