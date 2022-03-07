@@ -1,6 +1,6 @@
 #!/bin/bash
 PYTHON=python3
-OUTPUT_FOLDER=../../data/big-vul/
+OUTPUT_FOLDER=../../data/bigvul/
 RAW_DATA_FILENAME=big-vul-msr20.csv
 COMMITS_DATA_FILENAME=all-bigvul-patches.csv
 
@@ -22,4 +22,4 @@ echo "Filtering patches for Github..."
 $PYTHON ../common/references.py --task=filter \
                                 --fin=$OUTPUT_FOLDER/$COMMITS_DATA_FILENAME \
                                 --source=github \
-                                --dataset=big-vul 
+                                --dataset=bigvul 
