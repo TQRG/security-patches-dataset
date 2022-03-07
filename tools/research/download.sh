@@ -10,7 +10,7 @@ for dataset in "${RESEARCH_DATASETS[@]}"; do
     fi
 done
 
-wget -O ../../data/big-vul/big-vul-msr20.csv https://github.com/ZeoVan/MSR_20_Code_vulnerability_CSV_Dataset/raw/master/all_c_cpp_release2.0.csv
+wget -O ../../data/bigvul/big-vul-msr20.csv https://github.com/ZeoVan/MSR_20_Code_vulnerability_CSV_Dataset/raw/master/all_c_cpp_release2.0.csv
 
 wget -O ../../data/secbench/secbench.csv https://github.com/TQRG/secbench/raw/master/dataset/secbench.csv
 mv ../../data/secbench/secbench.csv ../../data/secbench/github-secbench-patches.csv
