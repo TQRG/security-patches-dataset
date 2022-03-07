@@ -2,10 +2,11 @@
 PYTHON=python3
 OUTPUT_FOLDER=../../data/big-vul/
 RAW_DATA_FILENAME=big-vul-msr20.csv
-COMMITS_DATA_FILENAME=all-big-vul-patches.csv
+COMMITS_DATA_FILENAME=all-bigvul-patches.csv
 
 python3 process.py --root-folder=$OUTPUT_FOLDER \
                     --fin=$RAW_DATA_FILENAME \
+                    --fout=$COMMITS_DATA_FILENAME \
                     --name=big_vul
 
 echo "\nGetting the commits references to github, bitbucket, gitlab and git..."
