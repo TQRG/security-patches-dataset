@@ -37,7 +37,7 @@ def process_sources(folder):
 
     dfs = {
         source: pd.read_csv(f"sources/{source}.csv", escapechar="\\")
-        for source in ("cve_details", "nvd", "osv")
+        for source in ("cve-details", "nvd", "osv")
     }
 
     for df in dfs:
@@ -45,7 +45,7 @@ def process_sources(folder):
 
     # Sources
     cve_det, osv, nvd = (
-        data.CVEDetails(dfs["cve_details"]),
+        data.CVEDetails(dfs["cve-details"]),
         data.OSV(dfs["osv"]),
         data.NVD(dfs["nvd"]),
     )
@@ -57,7 +57,7 @@ def process_sources(folder):
     )
     cve_det.df = transform_to_commits(cve_det.df)
     cve_det.df.to_csv(
-        f"{folder}/cve_details.csv",
+        f"{folder}/cve-details.csv",
         quoting=csv.QUOTE_NONNUMERIC,
         escapechar="\\",
         doublequote=False,
@@ -96,7 +96,7 @@ def process_sources(folder):
 def merge_sources(folder):
     dfs = [
         pd.read_csv(f"commits/{source}.csv", escapechar="\\")
-        for source in ("cve_details", "osv", "nvd")
+        for source in ("cve-details", "osv", "nvd")
     ]
     df = pd.concat(dfs, ignore_index=True)
     print(f"Total number of entries: {len(df)}")
@@ -125,8 +125,13 @@ def get_metadata(fin, folder):
 
     fout = f"{folder}/sources_commits_metadata.csv"
 
-    repos = set(df["project"])
+    if "message" in df.columns:
+        repos = set(df[~pd.notnull(df["message"])]["project"])
+    else:
+        repos = set(df["project"])
+
     for repo in repos:
+
         print(f"📂 Getting the metadata from project {repo}...")
         git, df = github_data.metadata(repo, df, git, config)
 
@@ -144,34 +149,60 @@ def get_metadata(fin, folder):
         )
 
 
-def filter_data(fin, folder):
+def clean_data(fin, fout, col="message"):
     df = pd.read_csv(fin, escapechar="\\")
-    df[pd.notnull(df["message"])].to_csv(
-        f"{folder}/final_dataset.csv",
+
+    if col == "files":
+        vuln_ids = list(df[~pd.notnull(df["files"])]["vuln_id"].unique())
+        df.drop(df[df["vuln_id"].isin(vuln_ids)].index, inplace=True)
+    elif col == "message":
+        vuln_ids = list(df[~pd.notnull(df["message"])]["vuln_id"].unique())
+        df.drop(df[df["vuln_id"].isin(vuln_ids)].index, inplace=True)
+
+    df.to_csv(
+        fout,
         quoting=csv.QUOTE_NONNUMERIC,
         escapechar="\\",
         doublequote=False,
         index=False,
     )
 
-
-def collect_feature(fin, folder, feature):
+def filter_data(fin, fout, col, value, nodups):
     df = pd.read_csv(fin, escapechar="\\")
+    
+    if nodups:
+        keys = list(df.keys())
+        keys.remove('dataset')
+        df = df[df[col] == value].drop_duplicates(subset=keys)
+    else:
+        df = df[df[col] == value]
+
+    df.to_csv(
+        fout,
+        quoting=csv.QUOTE_NONNUMERIC,
+        escapechar="\\",
+        doublequote=False,
+        index=False,
+    )
+
+def collect_feature(fin, fout, feature):
+    
+    df = pd.read_csv(fin, escapechar="\\")
+    
     if feature == "extension":
         df["files_extension"] = df["files"].apply(
             lambda x: features.get_files_extension(x)
         )
     elif feature == "language":
-        df["files"] = df["files"].apply(lambda x: norm.clean_nan(x))
         df["files_extension"] = df["files"].apply(
             lambda x: features.get_files_extension(x)
         )
         df["language"] = df["files_extension"].apply(lambda x: features.get_language(x))
 
-        df["files"] = df["files"].apply(lambda x: features.add_metadata(x))
+        df["files"] = df["files"].apply(lambda x: features.add(x))
 
     df.to_csv(
-        f"{folder}/vulnerabilities_v2.0.csv",
+        fout,
         quoting=csv.QUOTE_NONNUMERIC,
         escapechar="\\",
         doublequote=False,
@@ -186,13 +217,17 @@ if __name__ == "__main__":
     parser.add_argument(
         "--task",
         dest="format",
-        choices=["process", "merge", "metadata", "filter", "collection"],
+        choices=["process", "merge", "metadata", "clean", "collection", "filter"],
     )
     parser.add_argument(
         "--folder", type=str, metavar="output folder", help="base folder"
     )
     parser.add_argument("--fin", type=str, metavar="input file", help="base file")
+    parser.add_argument("--fout", type=str, metavar="output file", help="base file")
     parser.add_argument("--feature", dest="feature", choices=["extension", "language"])
+    parser.add_argument("--col", dest="col", choices=["files", "message", "patch"])
+    parser.add_argument("--value", metavar="value", help="cell value")
+    parser.add_argument("--nodups", default=False, action="store_true")
 
     args = parser.parse_args()
 
@@ -205,11 +240,14 @@ if __name__ == "__main__":
     elif args.format == "metadata":
         if args.folder and args.fin:
             get_metadata(args.fin, args.folder)
+    elif args.format == "clean":
+        if args.fout and args.fin and args.col:
+            clean_data(args.fin, args.fout, col=args.col)
     elif args.format == "filter":
-        if args.folder and args.fin:
-            filter_data(args.fin, args.folder)
+        if args.fout and args.fin and args.col and args.value:
+            filter_data(args.fin, args.fout, args.col, args.value, args.nodups)
     elif args.format == "collection":
-        if args.folder and args.fin and args.feature in ("extension", "language"):
-            collect_feature(args.fin, args.folder, args.feature)
+        if args.fout and args.fin and args.feature in ("extension", "language"):
+            collect_feature(args.fin, args.fout, args.feature)
     else:
         print("Something is wrong. Verify your parameters")
