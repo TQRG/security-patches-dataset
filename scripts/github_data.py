@@ -26,13 +26,14 @@ def sort_chain(repo, chain):
     for commit in chain_list:
         try:
             sha = commit.split('/')[-1]
-            print(repo, sha)
             gcommit = repo.get_commit(sha=sha.strip())
-            df = df.append({'commit': gcommit, 'datetime': gcommit.commit.author.date}, ignore_index = True)
-        except: 
-            print("Unexpected error: {}".format(sys.exc_info()))
+            author = gcommit.commit.author
+            df = df.append({'commit': gcommit, 'datetime': author.date}, ignore_index = True)
+        except Exception as e:
+            print("Unexpected error: {}".format(e))
             return None, None 
     
+    df = df.drop_duplicates()
     df = df.sort_values(by='datetime', ascending=True)
 
     # chain of commit and datetime
@@ -71,14 +72,21 @@ def metadata(repo, df, git, config):
 
     for idx, row in commits_list.iterrows():
         chain_ord, chain_datetime = sort_chain(repo, row['chain'])
-        print(row['dataset'], row['commit_sha'], row['commit_href'], chain_ord)
-
+        
+        # FIXME: one of the source vulns still has the href in 
+        # the commit_sha column when it reaches here. For some
+        # reason this is not fixed in the normalization phase.
+        # Find why!
+        if 'http' in row['commit_sha']:
+            row['commit_sha'] = row['commit_sha'].split('/')[-1]
+              
         if not chain_ord and not chain_datetime:
             print(f"🚨 Skipping {row['vuln_id']} ...")
             continue
 
         try:
             chain_ord_sha = [commit.commit.sha for commit in chain_ord]
+            print(chain_ord_sha)
             df.loc[idx, 'chain_ord'] = str(chain_ord_sha)
             if len(chain_ord) == 1:
                 last_commit = chain_ord[0]
