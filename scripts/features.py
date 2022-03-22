@@ -1,3 +1,6 @@
+import numpy as np
+import pandas as pd
+
 ext_map = {
     "Objective-C": {"m", "mm"},
     "Java": {"java", "jsp", "jspf"},
@@ -41,9 +44,10 @@ def get_extension(file):
 
 
 def get_files_extension(files):
-    return set(
+    extensions = set(
         [get_extension(file) for file in eval(files).keys() if len(file.split(".")) > 1]
     )
+    return extensions if len(extensions) > 0 else np.nan
 
 
 def get_key(val):
@@ -53,7 +57,10 @@ def get_key(val):
 
 
 def get_language(extensions):
-    return set([get_key(ext) for ext in extensions if get_key(ext) != None])
+    if not pd.notna(extensions):
+        return np.nan
+    languages = set([get_key(ext) for ext in extensions if get_key(ext) != None])
+    return languages if len(languages) > 0 else np.nan
 
 
 def add(files):

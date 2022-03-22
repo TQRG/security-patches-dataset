@@ -168,15 +168,25 @@ def clean_data(fin, fout, col="message"):
 
 
 def filter_data(fin, fout, col, value, nodups):
+    def if_lang(value, x):
+        if pd.notna(x):
+            if value in eval(x):
+                return 1    
+        return 0
     df = pd.read_csv(fin, escapechar="\\")
+    
+    if col == 'patch':
+        df = df[df[col] == value]
+    elif col == 'language':
+        df[value] = df[col].apply(lambda x: if_lang(value, x))
+        df = df[df[value] == 1]
+        del df[value]
 
     if nodups:
         keys = list(df.keys())
         keys.remove("dataset")
-        df = df[df[col] == value].drop_duplicates(subset=keys)
-    else:
-        df = df[df[col] == value]
-
+        df = df.drop_duplicates(subset=keys)
+            
     df.to_csv(
         fout,
         quoting=csv.QUOTE_NONNUMERIC,
@@ -226,7 +236,7 @@ if __name__ == "__main__":
     parser.add_argument("--fin", type=str, metavar="input file", help="base file")
     parser.add_argument("--fout", type=str, metavar="output file", help="base file")
     parser.add_argument("--feature", dest="feature", choices=["extension", "language"])
-    parser.add_argument("--col", dest="col", choices=["files", "message", "patch"])
+    parser.add_argument("--col", dest="col", choices=["files", "message", "patch", "language"])
     parser.add_argument("--value", metavar="value", help="cell value")
     parser.add_argument("--nodups", default=False, action="store_true")
 
@@ -242,10 +252,10 @@ if __name__ == "__main__":
         if args.folder and args.fin:
             get_metadata(args.fin, args.folder)
     elif args.format == "clean":
-        if args.fout and args.fin and args.col:
+        if args.fout and args.fin and args.col in ("files", "message"):
             clean_data(args.fin, args.fout, col=args.col)
     elif args.format == "filter":
-        if args.fout and args.fin and args.col and args.value:
+        if args.fout and args.fin and args.col in ("patch", "language") and args.value:
             filter_data(args.fin, args.fout, args.col, args.value, args.nodups)
     elif args.format == "collection":
         if args.fout and args.fin and args.feature in ("extension", "language"):
