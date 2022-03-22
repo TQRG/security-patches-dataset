@@ -5,7 +5,6 @@ import utils
 import datasets as data
 import normalize as norm
 import github_data
-from github import Github
 import csv
 import features
 
@@ -167,12 +166,13 @@ def clean_data(fin, fout, col="message"):
         index=False,
     )
 
+
 def filter_data(fin, fout, col, value, nodups):
     df = pd.read_csv(fin, escapechar="\\")
-    
+
     if nodups:
         keys = list(df.keys())
-        keys.remove('dataset')
+        keys.remove("dataset")
         df = df[df[col] == value].drop_duplicates(subset=keys)
     else:
         df = df[df[col] == value]
@@ -185,10 +185,11 @@ def filter_data(fin, fout, col, value, nodups):
         index=False,
     )
 
+
 def collect_feature(fin, fout, feature):
-    
+
     df = pd.read_csv(fin, escapechar="\\")
-    
+
     if feature == "extension":
         df["files_extension"] = df["files"].apply(
             lambda x: features.get_files_extension(x)
