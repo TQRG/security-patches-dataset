@@ -48,7 +48,3 @@ def check_if_dir_exists(path):
     d=os.path.dirname(path)
     if not os.path.exists(d):
         os.makedirs(d)
-
-# def make_tarfile(output_filename, source_dir):
-#     with tarfile.open(output_filename, "w") as tar:
-#         tar.add(source_dir, arcname=os.path.basename(source_dir))
