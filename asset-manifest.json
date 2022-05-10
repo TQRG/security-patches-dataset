@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/security-patches-dataset/static/css/main.073c9b0a.css",
+    "main.js": "/security-patches-dataset/static/js/main.a87a497e.js",
+    "static/js/787.d37de791.chunk.js": "/security-patches-dataset/static/js/787.d37de791.chunk.js",
+    "static/media/logo.svg": "/security-patches-dataset/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
+    "index.html": "/security-patches-dataset/index.html",
+    "main.073c9b0a.css.map": "/security-patches-dataset/static/css/main.073c9b0a.css.map",
+    "main.a87a497e.js.map": "/security-patches-dataset/static/js/main.a87a497e.js.map",
+    "787.d37de791.chunk.js.map": "/security-patches-dataset/static/js/787.d37de791.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.073c9b0a.css",
+    "static/js/main.a87a497e.js"
+  ]
+}
