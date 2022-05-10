@@ -3,7 +3,7 @@
 🔗 [https://osv.dev/list](https://osv.dev/list)
 
 OSV is the Open Source Vulnerability Database provided by Google. 
-All the resulting datasets are available at `../../data/osv/` (in case you want to check it). 
+All the resulting datasets are available at `~/data/osv/` (in case you want to check it). 
 
 ### 1. Getting the raw data
 
