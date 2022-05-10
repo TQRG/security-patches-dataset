@@ -18,7 +18,7 @@ python3 process.py --ecosystem=GHSA --fout=$dir/$file
 rm -rf GHSA
 
 ECOSYSTEMS=("DWF" "Go" "Linux" "Maven" "NuGet" "OSS-Fuzz" \
-                "PyPI" "RubyGems" "crates.io" "npm")
+                "PyPI" "RubyGems" "crates.io" "npm" "GSD" "Hex" "Packagist")
 
 for ecosystem in "${ECOSYSTEMS[@]}"; do
     gsutil cp gs://osv-vulnerabilities/$ecosystem/all.zip $ecosystem.zip
