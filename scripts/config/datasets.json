@@ -4,6 +4,5 @@
 	"big_vul": "commits/big_vul.csv",
 	"devign": "commits/devign.csv",
 	"osv": "commits/osv.csv",
-	"nvd": "commits/nvd.csv",
-	"cve_details": "commits/cve_details.csv"
+	"nvd": "commits/nvd.csv"
 }
