@@ -18,7 +18,7 @@ if [[ ! -e $sources_dir ]]; then
     echo "Creating $sources_dir..."
 fi
 
-SOURCES=("cve-details" "nvd" "osv")
+SOURCES=("nvd" "osv")
 
 for source in "${SOURCES[@]}"; do
     cp ../data/$source/github-$source-patches.csv $sources_dir/$source.csv

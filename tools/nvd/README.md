@@ -2,19 +2,18 @@
 
 🔗 [https://www.cvedetails.com/ data](https://nvd.nist.gov/vuln/data-feeds).
 
-All the resulting datasets are available at `../../data/nvd/` (in case you want to check it). 
+All the resulting datasets are available at `~/data/nvd/` (in case you want to check it). 
 
 ### 1. Getting the raw data
 
-The **raw dataset** is not available throught the repository. There are two ways of getting the dataset:
+The **raw dataset** is not available in the repository. There are two ways of getting the dataset:
 
 1. Scrape the entire NVD data by running the following script:
 
 ```bash
 source download.sh
 ```
-
-This script will save the data by `year` in `../../data/nvd/year/`.
+This script will save the data by `year` in `~/data/nvd/year/`.
 
 2. Download our google cloud mirror by running the following command:
    
