@@ -36,31 +36,16 @@ def process_sources(folder):
 
     dfs = {
         source: pd.read_csv(f"sources/{source}.csv", escapechar="\\")
-        for source in ("cve-details", "nvd", "osv")
+        for source in ("nvd", "osv")
     }
 
     for df in dfs:
         dfs[df]["dataset"] = df
 
     # Sources
-    cve_det, osv, nvd = (
-        data.CVEDetails(dfs["cve-details"]),
+    osv, nvd = (
         data.OSV(dfs["osv"]),
         data.NVD(dfs["nvd"]),
-    )
-
-    cve_det.prepare()
-    cve_det.normalize()
-    cve_det.df["chain"] = cve_det.df["chain"].apply(
-        lambda chain: norm.normalize_sha(git, config, chain)
-    )
-    cve_det.df = transform_to_commits(cve_det.df)
-    cve_det.df.to_csv(
-        f"{folder}/cve-details.csv",
-        quoting=csv.QUOTE_NONNUMERIC,
-        escapechar="\\",
-        doublequote=False,
-        index=False,
     )
 
     osv.prepare()
